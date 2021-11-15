@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container top top-buffer text-light justify-content-center">
+    <section id="search-section">
+        <div class="container text-light top-buffer">
+            <div class=" row align-items-center mx-auto" style=" width: 800px;">
+                <img class="mb-4 homepage-logo" src="{% static 'images/logo-detailed.svg' %}" style="height: 100px;" alt="Jungle Diff">
+
+
+                <!-- UPDATE SEARCH WITH CODE-->
+                <H2>hmm, you didnt search anything</H2>
+                {% include "searchbar.html" %}
+                
+                <div class="top-buffer info-card p-4">
+                    <p>You can view a Summoner's ranked record for season 1 to 11.</p>
+                    <p>You can view a summary of details entirely solo ranked, team ranked, normal games.</p>
+                    <p>You can view a Summoner's Pick-rate, Win-rate and KDA. for every Champion.</p>
+                    <p>You can watch the replay or record. (Click on the 'Open Current Game Info' button)</p>
+                </div>
+            </div>        
+        </div>
+    </section>
+    
+</div>
+
+{% endblock content %}

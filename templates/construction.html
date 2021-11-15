@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="bg-dark text-secondary px-4 py-5 text-center">
+    <div class="py-5">
+      <h1 class="display-5 fw-bold text-white">construction</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="fs-5 mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus, unde. Neque, numquam maxime nulla consectetur fugiat praesentium cum quae facilis dolorum. Obcaecati animi reprehenderit voluptate odio inventore corporis, et rerum!</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <a href="{% url 'summoner-home' %}"><button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Return Home</button></a>
+          <!--<button type="button" class="btn btn-outline-light btn-lg px-4">Secondary</button>-->
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

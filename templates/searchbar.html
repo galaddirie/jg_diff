@@ -1,0 +1,21 @@
+
+<form id="player-search" method="GET" class=" searchbar d-flex my-lg-0 my-3 " action="{% url 'player-page' %}">
+    <input  name = 'username' class="form-control search-custom" type="search" placeholder="Name 1, Name 2, ..." aria-label="Search">
+    <select name = 'region'class="search-region-select form-select form-select-sm" style="width: 80px;" aria-label="Select Region">
+        <option value="NA" selected >NA</option>
+        <option value="EUW">EUW</option>
+        <option value="KR">KR</option>
+    </select>
+    <button class="search-btn search-custom px-2" type="submit"><i class="fas fa-search"></i></button>
+</form>
+
+
+
+<!-- attempting to change the url from /summoner/?username=asdasd&region=NA to
+    /summoner/na/username=asdas
+<script type="text/javascript">
+    document.getElementById('player-search').storeID.onchange = function() {
+        var newaction = this.value;
+        document.getElementById('player-search').action = "/summoner/"+ newaction;
+};
+</script> -->

@@ -1,0 +1,558 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+
+
+:root {
+    --red: #ef476f;
+    --darkred:rgb(202, 41, 90);
+    --darkerred:rgb(141, 23, 58);
+    --lightblue: #40c1ff;
+    --darkblue: #118ab2;
+    --yellow: #ffd166;
+    --darkyellow:rgb(255, 169, 10);
+    --darkbrown: #131314;
+
+  }
+
+html{
+  min-height: 100%;
+  position: relative;
+}
+
+body{
+  font-family: 'Open Sans', serif;
+  background-color: var(--darkbrown);
+  margin-bottom: 0px;
+  padding-top: 65px; 
+}
+
+h1 {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+h2 {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.custom-nav-background{
+  background-color: #202020;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.navbar-social-media{
+  position: relative
+}
+
+.navbar-social-media a:focus{
+  box-shadow: none;
+}
+
+.navbar-social-media .fas{
+  font-size: 2em;
+
+  color: white;
+  
+}
+
+
+.navbar-social-media:hover .fas{
+  color: var(--yellow);
+}
+
+
+
+
+
+
+
+.container-1140{
+    width: 1140px;
+    margin: 0 auto;
+}
+/* NAV UNDERLINE */
+
+.item-underline-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.item-hover-underline{
+    opacity: 0;
+    background-color: var(--yellow);
+    height: 2px;
+    transition: .3s ease-in-out;
+    width: 0%;
+    border-radius: 15px;
+
+
+}
+
+
+.active  .item-hover-underline{
+    opacity: 1;
+    width: 30%;
+    background-color: var(--yellow);
+  
+}
+
+.item-underline-container:hover .item-hover-underline{ 
+    opacity: 1;
+    width: 85%;  
+    background-color: var(--yellow);
+
+}
+
+
+/* trying to make hover over link yellow  and make active red*/
+.item-underline-container:hover > .nav-link { 
+    color: var(--yellow) !important;
+}
+
+.active > .nav-link{
+    color: var(--yellow) !important;
+}
+
+
+
+@media (max-width: 991px) {
+    .custom-nav-background {
+        background-color: rgb(34, 34, 34);
+    }
+
+    .navbar-collapse .nav-item{
+        border-bottom: 1px solid rgba(41, 41, 41, 0.479);
+        
+    }
+
+    .active > .item-hover-underline{
+        width: 20%;
+        
+        
+    }
+
+    .item-underline-container:hover .item-hover-underline{ 
+        width: 20%;  
+    
+    }
+
+  .active:hover  .item-hover-underline{ 
+    width: 25%;  
+  
+  }
+
+  
+  
+}
+
+
+.top-buffer { 
+  margin-top: 80px;
+
+}
+.bottom-buffer{
+  margin-bottom: 40px;
+}
+
+
+.top-buffer-lg { 
+  margin-top: 80px;
+
+}
+
+/* search custom*/
+
+.nav-searchbar >form > input{
+  background-color: rgb(70, 69, 69);
+  box-shadow: rgba(25, 25, 26, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+  color: white;
+  width: 100%;
+}
+
+.nav-searchbar >form > input::placeholder{
+  color: rgb(199, 199, 199);
+  opacity: 1;
+}
+
+
+
+
+.nav-searchbar input:focus{
+  background-color: rgb(54, 54, 54) !important;
+  color: white;
+}
+
+.nav-searchbar >form > select{
+  background-color: rgb(70, 69, 69);
+  box-shadow: rgba(25, 25, 26, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+  color: rgb(199, 199, 199);
+}
+
+.nav-searchbar  select:focus{
+  background-color: rgb(70, 69, 69);
+  box-shadow: rgba(25, 25, 26, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+  color: white !important;
+}
+
+.nav-searchbar  .search-region-select{
+  border-radius: 0%; 
+  border-width: 0px; 
+  border-left-width: 2px;
+  border-right-width: 2px;
+  border-color: #2e2e2e ;
+  
+}
+
+textarea:focus, 
+textarea.form-control:focus,
+select.form-select:focus,
+input.form-control:focus, 
+input[type=text]:focus, 
+input[type=password]:focus, 
+input[type=email]:focus, 
+input[type=number]:focus, 
+input[type=search]:focus,
+[type=text].form-control:focus, 
+[type=password].form-control:focus, 
+[type=email].form-control:focus, 
+[type=tel].form-control:focus, 
+[contenteditable].form-control:focus {
+  box-shadow: none;
+}
+
+.nav-searchbar select.form-select-indicator:focus{
+  color: white !important;
+}
+
+.searchbar input{
+  border-radius: 35px 0 0 35px;
+}
+
+.searchbar .btn{
+  border-radius: 0 35px 35px 0;
+  height: 5100%;
+}
+
+.search-custom{
+    border-radius: 0px;
+    border: 0px;
+}
+
+
+.search-region-select{
+    border-radius: 0%; 
+    border-width: 0px; 
+    border-left-width: 2px;
+    border-color: rgb(179, 179, 179);
+    
+}
+
+
+
+.search-btn{
+  background-color: var(--yellow)
+}
+
+.nav-searchbar .search-btn{
+  background-color:rgb(70, 69, 69);
+  color: var(--yellow);
+  box-shadow: rgba(25, 25, 26, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+
+}
+
+.search-btn:hover{
+background-color: var(--darkyellow);
+}
+
+.nav-searchbar .search-btn:hover{
+  background-color: rgb(44, 44, 44);
+}
+
+/*HOMEPAGE*/
+.info-card{
+  background-color: rgb(58, 58, 58);
+
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+/*
+.homepage-logo{
+  box-shadow: rgba(0, 0, 0, 0.548) 0px 5px 15px;
+}
+*/
+
+.background-container{
+  width: 100%;
+  margin: 0 auto;
+}
+
+
+.home-background{
+  text-align: center;
+  height: 1000PX;
+  width: 400px;
+  
+  overflow: hidden;
+  z-index: -1;
+  opacity: 20%;
+}
+
+.bg-left{
+  position: absolute;
+  left: 0;
+}
+
+.bg-right{
+  position: absolute;
+  right: 0;
+}
+.home-background img {
+  height: 1000px;
+
+
+}
+
+
+.search-container{
+  position: absolute;
+  top: 80px;
+  width: 100%;
+}
+
+@media (max-width: 991px) {
+  .bg-right{
+    width: 0;
+  } 
+
+}
+
+/*player valid page*/
+
+.league-icon img{
+  width: 60px;
+  height: 60px;
+}
+
+.season-btn{
+  background-color: var(--darkblue);
+  padding: 5px;
+  border-radius: 10%;
+}
+
+.player-profile-header{
+  height: 175px;
+  
+}
+.player-profile-container{
+  
+  position: relative;
+  top: -30px;
+  width: 230px;
+  height: 230px;
+  z-index: 999;
+}
+
+.player-profile-icon{
+  width: 230px;
+  height: 230px;
+}
+
+.player-profile-icon-img{
+  width: 140px;
+  height: 140px;
+  margin-top: 45px;
+  
+  border-radius: 100%;
+}
+
+.icon_border{
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  background-size: 230px;
+  background-repeat: no-repeat;
+  
+  
+}
+
+.icon_banner{
+  position: absolute;
+  top: 120px;
+  width: 230px;
+  height: 230px;
+  background-size: 220px;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.level-container{
+  position: relative;
+  top: -12px;
+  
+  width: 50px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--yellow);
+  font-weight: bold;
+  font-family: 1.5em;
+  
+}
+
+.player-info-container{
+  position: relative;
+  font-size: 1em;
+  padding: 10px;
+  max-width: 1200px;
+  height: 150px;
+  top: -200px;
+  border-radius: 100px; 
+  border: 1px solid rgba(255, 255, 255, 0.158);
+}
+.update-btn{
+  position: absolute;
+  left: 50px;
+  top: -31px;
+  background-color: var(--lightblue);
+  transition: .2s linear;
+}
+
+.update-btn:hover{
+  top: -35px;
+  background-color: var(--darkblue);
+}
+
+.live-btn{
+  position: absolute;
+  left: 120px;
+  top: -31px;
+  background-color: var(--darkred);
+  transition: .2s linear;
+}
+
+.live-btn:hover{
+  top: -35px;
+  background-color: var(--darkerred);
+}
+
+.live-btn:focus{
+  box-shadow: none;
+ 
+}
+
+.player-profile-name{
+  
+  font-weight: bold;
+  font-size: 1.3Sem;
+}
+
+.rank-value{
+  font-weight: bold; 
+  color: var(--yellow);
+}
+
+/*
+## PLAYER PAGE VALID TABS ##
+*/
+
+.graph-header{
+  margin-bottom: 0 !important;
+  font-size: 12px;
+}
+
+.graph-header button {
+
+  font-weight: bold;
+  color: #616161;
+  background-color: rgb(59, 59, 59) !important;
+  
+  
+}
+.graph-header button:hover {
+background-color: rgb(141, 141, 141) !important;
+color: var(--primary);
+}
+.graph-header button:focus {
+  box-shadow:none;
+}
+.graph-header > li > .active{
+  background-color: rgb(117, 117, 117) !important;
+  color: var(--red) !important;
+  
+}
+.graph-header > li > .active:hover{
+  color: var(--darkbrown) !important;
+}
+.tab-content{
+  background-color: rgb(117, 117, 117);
+}
+
+/*FOOTER*/
+footer{
+	background-color: var(--darkbrown);
+  
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
+footer .container {
+  border-top: solid 2px rgba(255, 255, 255, 0.158);
+}
+
+.footer-lists{
+  padding-top: 50px;
+}
+
+.footer-lists ul{
+  list-style: none;
+}
+
+.top-footer{
+	margin: 0px 0px 50px;
+}
+
+.bottom-footer{
+	color: rgb(184, 184, 184);
+	font-size: 1em;
+}
+
+
+.footer-links ul li{
+	width: 150px;
+	padding: 3px 3px 3px 20px;
+	border-left: 1px solid;
+	border-right: 1px solid;
+	border-color: rgb(80, 80, 80);
+	
+}
+.footer-links ul li a{
+	color: white;
+	text-decoration: none;
+	font-size: .8em;
+	font-weight: 500;
+	transition: .2s linear;
+	
+}
+
+.footer-links ul li a:hover{
+	text-decoration: underline;
+	color: var(--yellow);
+	transition: .2s linear;
+}
+
+
+
+
+
+.footer-social-media  ul li a{
+	font-size: 2em;
+	color: white;
+	transition: .2s linear;
+  margin-left: 10px;
+}
+
+.footer-social-media  ul li a:hover{
+	color: var(--yellow);
+	cursor: pointer;
+}
+
+

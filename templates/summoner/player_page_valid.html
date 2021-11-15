@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container top top-buffer text-light">
+    
+    <!-- <h1>{{ api_request }}</h1> -->
+    <main>
+        <div class="container update-btn">
+            <button class="btn btn-md btn-danger">UPDATE</button>
+        </div>
+
+
+        <section id="Player-Info">
+            <div class="container mt-4  d-flex justify-content-between">
+                <div class="season-ranks d-flex">
+                    
+                </div>
+                
+            </div>
+            
+            <div class="container profile-container"> 
+                
+                <div class="player-profile-header"  >
+                    
+                    <div class="player-profile-container  text-center text-light mx-auto" >
+                        
+                        <div class="player-profile-icon">
+                            <div class="d-flex  justify-content-center">
+                                <div class="icon_banner " style="background-image: url( '{{ 0.leagues.SOLO.banner }}' );" ></div>
+                                <div class="icon_border " style="background-image: url( '{{ 0.profile_icon_border }}' );" ></div>
+                            </div>
+                            <img class="player-profile-icon-img mx-auto"src="{{ 0.profile_icon }}" alt="profile icon">
+                            <div class="level-container mx-auto">{{ 0.level }}</div>
+                        </div>
+                            
+                        <div class="player-profile-name">
+                            {{ 0.name }}
+                        </div>
+                    </div>
+                    
+                    <div class=" container player-info-container d-flex  bg-dark mx-auto py-4  "style="">
+                        <button class="update-btn btn btn-sm text-light">UPDATE</button>
+                        <button class="live-btn btn btn-sm text-light">LIVE</button>
+                        <div class="container d-flex" >
+                            <div class="info-left d-flex  align-items-center col-6 p-4" style="background-color: black; border-radius: 50px 0 0 50px;" >
+                                {% for league, entries in 0.leagues.items%}
+                                    
+                                    <div class="me-3 text-center">
+                                        
+                                        <div class="league-icon"><img src="{{ entries.icon }}" alt="gold 1"></div> 
+                                    </div>
+                                    <div class="me-3 text-left" style="width: 120px; ">
+                                        <div class="rank-name">{{league}}Q</div>
+                                        <div class="text-left" style="font-size: 1em;">
+                                            <span class="rank-value">{{ entries.rank }} </span>
+                                            {% if entries.lp %}
+                                            <span style="font-size: .9em;">{{ entries.lp }}</span><span style="font-size: .7em;">LP</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-left" style="font-size: 15px;">
+                                            {% if entries.lp %} 
+                                            {{ entries.wins }}<span style="font-size: .7em;">W</span> 
+                                            {{ entries.losses }}<span style="font-size: .7em;">L</span> 
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-left" style="font-size: 15px;">
+                                            {% if entries.lp %} 
+                                            {% if entries.promos.played %}
+                                                Series:
+                                                {% for win in entries.promos.played %}
+                                                    {% if win%}
+                                                        <span style="font-size: .7em; color: rgb(210, 255, 143);"><i class="fas fa-check"></i></span> 
+                                                    {% else %}
+                                                        <span style="font-size: .7em; color: rgb(252, 94, 94);"><i class="fas fa-times"></i></span> 
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% for i in entries.promos.not_played %}
+                                                    <span style="font-size: .7em; color: grey;"><i class="far fa-circle"></i></span> 
+                                                    
+                                                {% endfor %}
+                                            
+                                            {% else %}
+                                                Win Ratio: {{ entries.WR }}<span style="font-size: .7em;">%</span> 
+                                            {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                            
+                            <div class="info-right  mx-4  col-6 container d-flex" style="padding-left: 60px;" >
+                                <div class="ms-3 col-6 d-flex">
+                                    <div class=" ">
+                                        <div style="width: 100px; height: 100px; border: 20px solid gray; border-radius: 100%;"></div>
+                                    </div>
+                                    <div class="ms-3">
+                                        <div style="width: 150px; height: 100px; background-color: rgb(31, 31, 31);"></div>
+                                    </div>
+                                </div>
+                                <div class="ms-3 text-center col-4" >
+                                    <div class="role-name">Preferred Role</div>
+                                    <div class="league-icon"><img src="{% static 'images/top_lane.png' %}" alt="gold 1"></i></div>
+                                    <div class="role-value">TOP</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="Game-Info">
+            <div class="container-fluid" style="z-index: -1; position: relative; top: -70px; border-top: 2px solid rgba(255, 255, 255, 0.158);">
+            </div>
+            <!--GAME LISTS-->
+            <div class="container">
+                <div class="col-6 graphs" style="margin-top: 150px;">
+                    <!-- snippet from bootstrap 5 documentation https://getbootstrap.com/docs/5.0/components/navs-tabs/#javascript-behavior -->
+                      <ul class="nav nav-tabs mb-4 graph-header" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#Frontend" type="button" role="tab" aria-controls="Frontend" aria-selected="true">FRONTEND SKILLS</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#Backend" type="button" role="tab" aria-controls="Backend" aria-selected="false">BACKEND SKILLS</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#Design" type="button" role="tab" aria-controls="Design" aria-selected="false">DESGIN SKILLS</button>
+                        </li>
+                      
+                      </ul>
+                
+                      <!-- Tab panes -->
+                      <div class="tab-content " style="border: 1px solid rgb(223, 221, 221); padding: 20px 10px 10px 10px;">
+                        <div class="tab-pane active graph-content" id="Frontend" role="tabpanel" aria-labelledby="home-tab">
+                         
+                        </div>
+                        <div class="tab-pane graph-content" id="Backend" role="tabpanel" aria-labelledby="profile-tab">
+                          
+                        </div>
+                        <div class="tab-pane graph-content" id="Design" role="tabpanel" aria-labelledby="messages-tab">
+                          
+                        </div>
+                        
+                      </div>
+                    
+                     
+                </div>
+            </div>
+        </section>
+    </main>
+
+    
+</div>
+
+{% endblock content %}

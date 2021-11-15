@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="">
+    <aside class="container-fluid">
+        <div class="background-container d-flex justify-content-between">
+            <div class="home-background col-lg-3">
+                <img class="mb- bg-left" src="{% static 'summoner/images/yas_home_bg_left.png' %}" alt="yasuo">
+            </div>
+            <div class=" home-background col-lg-3">
+                <img class="mb-4 bg-right" src="{% static 'summoner/images/yone_home_bg_right.png' %}" alt="yone">
+            </div>
+        </div>
+    </aside>
+    <main>
+        <section id="search-section">
+            <div class="search-container text-light top-buffer justify-content-center align-items-center d-flex">
+                <div class=" col-xl-8 col-8 justify-content-center  d-flex flex-column ">
+                    <img class="mb-4 homepage-logo " src="{% static 'images/logo-detailed.svg' %}"
+                        style="height: 250px;" alt="Jungle Diff">
+
+
+                    <!-- UPDATE SEARCH WITH CODE-->
+                    {% include "searchbar.html" %}
+                    <div class="top-buffer container info-card p-4 mx-auto">
+                        <div style="height: 173px;">
+                            <!--<iframe width="100%" height="573" src="https://www.youtube.com/embed/Mi82vCpwH4A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            -->
+                            test
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+{% endblock content %}

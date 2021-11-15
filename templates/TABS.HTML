@@ -1,0 +1,46 @@
+<div class="container graphs" style="margin-top: 80px;">
+    <!-- snippet from bootstrap 5 documentation https://getbootstrap.com/docs/5.0/components/navs-tabs/#javascript-behavior -->
+      <ul class="nav nav-tabs mb-4 graph-header" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#Frontend" type="button" role="tab" aria-controls="Frontend" aria-selected="true">FRONTEND SKILLS</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#Backend" type="button" role="tab" aria-controls="Backend" aria-selected="false">BACKEND SKILLS</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#Design" type="button" role="tab" aria-controls="Design" aria-selected="false">DESGIN SKILLS</button>
+        </li>
+      
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content" style="border: 1px solid rgb(223, 221, 221); border-top: 1px transparent; padding: 20px 10px 10px 10px;">
+        <div class="tab-pane active graph-content" id="Frontend" role="tabpanel" aria-labelledby="home-tab">
+          <div class="bar front expert" data-skill="HTML5"></div>
+          <div class="bar front expert" data-skill="CSS3"></div>
+          <div class="bar front basic" data-skill="JAVASCRIPT"></div>
+          <div class="bar front intermediate" data-skill=""></div>
+          <div class="bar back advanced" data-skill="WORDPRESS"></div>
+          <div class="bar back expert" data-skill="BOOTSTRAP"></div>
+        </div>
+        <div class="tab-pane graph-content" id="Backend" role="tabpanel" aria-labelledby="profile-tab">
+          <div class="bar back expert" data-skill="Python"></div>
+          <div class="bar back basic" data-skill="PHP"></div>
+          <div class="bar back intermediate" data-skill="mySQL"></div>
+          <div class="bar front advanced" data-skill="Django"></div>
+          <div class="bar front learning" data-skill="GIT"></div>
+          <div class="bar basic" data-skill="Linux"></div>
+        </div>
+        <div class="tab-pane graph-content" id="Design" role="tabpanel" aria-labelledby="messages-tab">
+          <div class="bar intermediate" data-skill="ACCESSIBILE WEB DESIGN (WCAG)"></div>
+          <div class="bar back advanced" data-skill="UX/UI DESIGN"></div>
+          <div class="bar front advanced" data-skill="SEARCH ENGINE OPTIMIZATION"></div>
+          <div class="bar front expert" data-skill="RESPONSIVE WEB DEVELOPMENT"></div>
+          <div class="bar expert" data-skill="ILLUSTRATOR"></div>
+          <div class="bar expert" data-skill="GRAPHIC DESGIN"></div>
+        </div>
+        
+      </div>
+    
+     
+    </div>
