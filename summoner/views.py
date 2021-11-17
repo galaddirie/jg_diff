@@ -1,7 +1,7 @@
 from typing import Match
 from jg_diff.settings import CASSIOPEIA_RIOT_API_KEY
 from summoner.id_translation import *
-
+import json
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, response
@@ -16,45 +16,70 @@ DRAGON = 'https://raw.communitydragon.org/latest/plugins/'
 # MATCH HISORY HELPERS
 
 
-def get_match(match_id, continent, name):
+def get_match(match_id, continent, name, region):
     match = cass.Match(id=match_id, continent=continent)
-    print(match.exists)
-    if match.exists:
-        summoner = None
-        for player in match.participants:
+    
+    try:
+        is_remake = match.is_remake
+    except:
+        is_remake = False
+
+
+    match_info = {
+        'is_remake': is_remake,
+        'duration': match.duration,
+        'creation': match.creation,
+        'queue': match.queue,
+    }
+    summoner = None
+    participants ={}
+    for team in match.teams:
+        players = {}
+        for player in team.participants:
             if player.summoner.name == name:
                 summoner = player
+            rank = player.summoner.ranks[match_info['queue']]
+            items ={}
+            for item in player.stats.items:
+                # items[item.name] = {
+                #     'name': item.name,
+                #     'desc': item.description,
+                #     'image':item.image
+                #     }
+                ...
 
-        if summoner:
-            stats = {
-                'items': summoner.stats.items,
-                'kills': summoner.stats.kills,
-                'deaths': summoner.stats.deaths,
-                'assists': summoner.stats.assists,
-                'kda': summoner.stats.kda,
-                'level': summoner.stats.level,
-                'win': summoner.stats.win,
+            player_data={
+                'name': player.summoner.name,
+                'level': player.stats.level,
+
+                'kills': player.stats.kills,
+                'deaths': player.stats.deaths,
+                'assists': player.stats.assists,
+                'kda': player.stats.kda,
+                
+                'vision_score': player.stats.vision_score,
+                'cs': player.stats.total_minions_killed,
+                'rank': [rank.tier.value,rank.division.value],
+
+                'champion':player.champion,
+                'spells': [player.summoner_spell_d, player.summoner_spell_f],
+                #'runes': player.runes,
+                'items': items,
             }
+            players[player_data['name']] = player_data
+        participants[team.side] = players
 
-            summoner_info = {
-                'champion': summoner.champion,
-                'stats': stats,
-                'side': summoner.side,
+    if summoner:
+        match_info['win'] = summoner.stats.win,
+        summoner_stats = participants[summoner.side][summoner.summoner.name]
 
-            }
-
-            game = {
-                'player': summoner_info,
-                'blue_team': match.blue_team.participants,
-                'red_team': match.red_team.participants,
-                'is_remake': match.is_remake,
-                'win': summoner_info['stats']['win'],
-                'duration': match.duration,
-                'creation': match.creation,
-                'queue': match.queue,
-            }
-        return game
-    return match
+        
+    match_data = {
+        'match_info': match_info,
+        'summoner_stats': summoner_stats,
+        'participants': participants
+    }
+    return match_data
 
 
 def get_match_history(summoner, start):
@@ -63,20 +88,19 @@ def get_match_history(summoner, start):
     puuid = summoner.puuid
     print(puuid)
     # queue={}
-    url_response = requests.get('https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&api_key={}'
+    url_response = requests.get('https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count=5&api_key={}'
                                 .format(continent, puuid, start, CASSIOPEIA_RIOT_API_KEY))
 
     match_history = []
-    mh_temp = "".join(url_response.text.split()).replace(
-        region_id + '_', '').split(',')
-    for match_id in mh_temp:
+   # print(json.loads(url_response.text))
+    for match_id in json.loads(url_response.text):
         acc = ''
         for char in match_id:
             if char.isdigit():
                 acc += char
-        match = acc  # get_match(acc, summoner.region.continent, summoner.name)
+        match = get_match(match_id, summoner.region.continent, summoner.name ,summoner.region)
         match_history.append(match)
-
+    print(len(match_history), match_history[0]['summoner_stats'])
     return match_history
 
 
@@ -158,9 +182,10 @@ def get_summoner_helper(request):
         if summoner.exists:
             # begin_time=cass.Patch.latest(region="NA").start
             # begin_index=0, end_index=21
-
+            # check if it is ajax
             match_history = get_match_history(summoner, 0)
             match_info = get_recent_info(match_history)
+            #
             leagues = {'SOLO': {'rank': 'Unranked', 'icon': get_rank_icon('unranked'), 'banner': get_rank_banner('unranked')},
                        'FLEX': {'rank': 'Unranked', 'icon': get_rank_icon('unranked'), 'banner': get_rank_banner('unranked')}}
             k = 0
@@ -179,7 +204,7 @@ def get_summoner_helper(request):
                 'profile_icon': summoner.profile_icon.url,
                 'profile_icon_border': get_perstige_crest(summoner.level),
             }
-            print(data)
+            #print(data)
             if summoner.sanitized_name not in name_check:
                 summoner_data[i] = data
                 name_check.append(summoner.sanitized_name)
