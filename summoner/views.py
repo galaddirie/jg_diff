@@ -18,7 +18,7 @@ DRAGON = 'https://raw.communitydragon.org/latest/plugins/'
 
 def get_match(match_id, continent, name, region):
     match = cass.Match(id=match_id, continent=continent)
-    
+    match.load()
     try:
         is_remake = match.is_remake
     except:
@@ -29,54 +29,70 @@ def get_match(match_id, continent, name, region):
         'is_remake': is_remake,
         'duration': match.duration,
         'creation': match.creation,
-        'queue': match.queue,
+        'queue': match.queue.value,
+        'tier_average':'not implemented'
     }
     summoner = None
     participants ={}
+    tier_acc = []
     for team in match.teams:
         players = {}
+        # we should only initially load for main player unless player clicks on more details
         for player in team.participants:
+            player_data = {}
             if player.summoner.name == name:
                 summoner = player
-            rank = player.summoner.ranks[match_info['queue']]
-            items ={}
-            for item in player.stats.items:
-                # items[item.name] = {
-                #     'name': item.name,
-                #     'desc': item.description,
-                #     'image':item.image
-                #     }
-                ...
+                rank = player.summoner.ranks[match.queue]
+                items =[]
+                for item in player.stats.items:
+                    try:
+                        items.append({'name': item.name,'image':item.image.url}) # 'desc': item.description,
 
-            player_data={
-                'name': player.summoner.name,
-                'level': player.stats.level,
-
-                'kills': player.stats.kills,
-                'deaths': player.stats.deaths,
-                'assists': player.stats.assists,
-                'kda': player.stats.kda,
+                    except:
+                        items.append(None)
                 
-                'vision_score': player.stats.vision_score,
-                'cs': player.stats.total_minions_killed,
-                'rank': [rank.tier.value,rank.division.value],
+                player_data={
+                    'name': player.summoner.name,
+                    'level': player.stats.level,
 
-                'champion':player.champion,
-                'spells': [player.summoner_spell_d, player.summoner_spell_f],
-                #'runes': player.runes,
-                'items': items,
-            }
+                    'kills': player.stats.kills,
+                    'deaths': player.stats.deaths,
+                    'assists': player.stats.assists,
+                    'KDA': '{}/{}/{}'.format(player.stats.kills, player.stats.deaths, player.stats.assists),
+                    'kill_ratio':'{}:1'.format( round(player.stats.kda,2)),
+                    'multi_kill': None,
+                    
+                    'vision_score': player.stats.vision_score,
+                    'cs': player.stats.total_minions_killed,
+                    'rank': [rank.tier.value,rank.division.value],
+
+                    'champion':{'name':player.champion.name, 'image':player.champion.image.url},
+                    'spells': [{'name':player.summoner_spell_d.name,'image':player.summoner_spell_d.image.url}, {'name':player.summoner_spell_f.name,'image':player.summoner_spell_f.image.url}],
+                    #'runes': player.runes,
+                    'items': items,
+                }
+            else:
+                player_data={
+                    'name': player.summoner.name,
+                    'champion':{'name':player.champion.name, 'image':player.champion.image.url},}
             players[player_data['name']] = player_data
-        participants[team.side] = players
+        participants[team.side.name] = players
 
     if summoner:
-        match_info['win'] = summoner.stats.win,
-        summoner_stats = participants[summoner.side][summoner.summoner.name]
+        if summoner.stats.win:
+            match_info['win'] = 'WIN'
+
+        else:
+            match_info['win'] = 'LOSE'
+
+        if match_info['is_remake']:
+            match_info['win'] = 'REMAKE'
+        summoner_stats = participants[summoner.side.name][summoner.summoner.name]
 
         
     match_data = {
         'match_info': match_info,
-        'summoner_stats': summoner_stats,
+        'summoner_info': summoner_stats,
         'participants': participants
     }
     return match_data
@@ -100,7 +116,7 @@ def get_match_history(summoner, start):
                 acc += char
         match = get_match(match_id, summoner.region.continent, summoner.name ,summoner.region)
         match_history.append(match)
-    print(len(match_history), match_history[0]['summoner_stats'])
+    print(len(match_history), match_history[0])
     return match_history
 
 
@@ -113,7 +129,7 @@ def get_recent_info(match_history):
             'wins': match_history,
 
         }
-    return match_history
+    return []
 
 
 # RESOURCES GETTERS
@@ -199,7 +215,7 @@ def get_summoner_helper(request):
                 'name': summoner.name,
                 'level': summoner.level,
                 'rank': summoner.ranks,
-                'match history': match_info,
+                'match_history': match_history,
                 'leagues': leagues,
                 'profile_icon': summoner.profile_icon.url,
                 'profile_icon_border': get_perstige_crest(summoner.level),
