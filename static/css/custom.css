@@ -487,6 +487,64 @@ color: var(--primary);
   background-color: rgb(117, 117, 117);
 }
 
+
+/* MATCH HISTORY */
+.match-container{
+  margin-top: 150px; 
+  height: 200px;
+  
+}
+.match-card{
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  height: 120px;
+  border-radius: 60px;
+  margin-top: 10px;
+}
+
+.match-content{
+  height: 100%;
+}
+
+.champ-icon{
+  height: 75px; 
+  width:  75px; 
+  border-radius: 50%;
+}
+
+/*PLAYER STATS*/
+.multikill{
+  background-color: crimson; 
+  
+  padding: 4px; 
+  border-radius: 30px;
+  
+}
+/*item list*/
+.items{
+  width: 80px;
+}
+
+.item{
+  padding: 0;
+  border-radius: 5px;
+  margin: 5px;
+  width: 20px;
+  height: 20px;
+}
+
+/*participants / player list*/
+.player-list{
+  font-size: 12px;
+}
+
+.player-list-champ-icon{
+  border-radius: 2px;
+  margin: 2px;
+  width: 12px;
+  height: 12px;
+}
 /*FOOTER*/
 footer{
 	background-color: var(--darkbrown);

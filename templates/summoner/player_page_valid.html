@@ -115,38 +115,115 @@
         <section id="Game-Info">
             <div class="container-fluid" style="z-index: -1; position: relative; top: -70px; border-top: 2px solid rgba(255, 255, 255, 0.158);">
             </div>
-            <!--GAME LISTS-->
-            <div class="container">
-                <div class="col-6 graphs" style="margin-top: 150px;">
-                    <!-- snippet from bootstrap 5 documentation https://getbootstrap.com/docs/5.0/components/navs-tabs/#javascript-behavior -->
-                      <ul class="nav nav-tabs mb-4 graph-header" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#Frontend" type="button" role="tab" aria-controls="Frontend" aria-selected="true">FRONTEND SKILLS</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#Backend" type="button" role="tab" aria-controls="Backend" aria-selected="false">BACKEND SKILLS</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                          <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#Design" type="button" role="tab" aria-controls="Design" aria-selected="false">DESGIN SKILLS</button>
-                        </li>
-                      
-                      </ul>
-                
-                      <!-- Tab panes -->
-                      <div class="tab-content " style="border: 1px solid rgb(223, 221, 221); padding: 20px 10px 10px 10px;">
-                        <div class="tab-pane active graph-content" id="Frontend" role="tabpanel" aria-labelledby="home-tab">
-                         
-                        </div>
-                        <div class="tab-pane graph-content" id="Backend" role="tabpanel" aria-labelledby="profile-tab">
-                          
-                        </div>
-                        <div class="tab-pane graph-content" id="Design" role="tabpanel" aria-labelledby="messages-tab">
-                          
-                        </div>
-                        
-                      </div>
+            <!--GAME info-->
+            <div class="container " style="max-width: 1200px;">
+                <div class="row justify-content-between">
+                    <!-- HISTORY SUMMARY-->
+                    <div class="col-4 graphs bg-dark" style="margin-top: 150px; height: 200px;">
                     
-                     
+                        
+                        
+                    </div>
+                    <!-- MATCH LIST-->
+                    <div class="col-8  match-container ">
+                        <div class="header" > 
+                            <div class="bg-dark" style="border-bottom: 1px solid rgba(255, 255, 255, 0.158); padding: 10px 10px 0 10px;">
+                            TOTAL, NORMAL, RANKED SOLO, FLEX
+                            </div>
+                        </div>
+                        <div class="match-card bg-dark" style="border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.158);">
+                            <div class="match-content d-flex justify-content-between px-4" style="font-size: 12px; width: 100%; ">
+                                <div class="match-info text-center d-flex align-items-center">
+                                    <div>
+                                        <div class="queue-type" style="font-weight: bold;">Ranked SOLO</div>
+                                        <div class="time-delta"> 1 hour ago</div>
+                                        <div class="victory-status">WIN 25:00</div>
+                                    </div>
+                                </div>
+                                <div class="champion-info d-flex align-items-center justify-content-center">
+                                    <div>
+                                        <div class="champ-icon bg-light" ></div>
+                                        <div class="summoner-spells"> </div>
+                                        <div class="runes" ></div>
+                                    </div>
+                                </div>
+                                <div class="player-stats d-flex flex-column text-center justify-content-between my-1">
+                                        <div class="KDA">0/0/0</div>
+                                        <div class="KDA-ratio">0.00:1 KDA</div>
+                                        <div class="KDA-ratio">P/Kill 35%</div>
+                                        <div class="multikill ">double kill</div>
+                                </div>
+                                <div class="player-stats-continued d-flex flex-column text-center justify-content-between my-1">
+                                        <div class="KDA">Level 16</div>
+                                        <div class="KDA-ratio">128(10.0) CS</div>
+                                        <div class="KDA-ratio">Tier Average</div>
+                                        <div class="KDA-ratio">Masters</div>
+                                </div>
+                                <div class="items d-flex align-items-center">
+                                    <div class="item-container row" >
+                                        <div class="item bg-light"></div>
+                                        <div class="item bg-light"></div>
+                                        <div class="item bg-light"></div>
+                                        <div class="item bg-light"></div>
+                                        <div class="item bg-light"></div>
+                                        <div class="item bg-light"></div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="participants d-flex align-items-center">
+                                    <div class="Team">
+                                        <div class="player-list me-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="player-list-champ-icon bg-light"></div>
+                                                playerName
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="player-list-champ-icon bg-light"></div>
+                                                playerName
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="player-list-champ-icon bg-light"></div>
+                                                playerName
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="player-list-champ-icon bg-light"></div>
+                                                playerName
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="player-list-champ-icon bg-light"></div>
+                                                playerName
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="Team">
+                                        <div class="player-list ">
+                                            <div class="d-flex align-items-center">
+                                                <div class="player-list-champ-icon bg-light"></div>
+                                                playerName
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="player-list-champ-icon bg-light"></div>
+                                                playerName
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="player-list-champ-icon bg-light"></div>
+                                                playerName
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="player-list-champ-icon bg-light"></div>
+                                                playerName
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="player-list-champ-icon bg-light"></div>
+                                                playerName
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="match-details"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
