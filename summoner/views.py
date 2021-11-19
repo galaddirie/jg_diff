@@ -2,6 +2,7 @@ from typing import Match
 from jg_diff.settings import CASSIOPEIA_RIOT_API_KEY
 from summoner.id_translation import *
 import json
+import arrow
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, response
@@ -15,6 +16,82 @@ DRAGON = 'https://raw.communitydragon.org/latest/plugins/'
 
 # MATCH HISORY HELPERS
 
+def get_participant_data(match, player):
+    """
+    Helper for get_match()
+    """
+    player_data = {}
+    
+    rank_data =[]
+    if match.game_type == 'ranked':
+        rank = player.summoner.ranks[match.queue]
+        rank_data=[rank.tier.value,rank.division.value]
+    
+    items =[]
+    for item in player.stats.items:
+        trinket ={'name':'', 'image': ''}
+        try: 
+            items.append({'name': item.name,'image':item.image.url}) # 'desc': item.description,
+    
+        except:
+            ...
+    trinket = items.pop(-1)
+    items += [None]*(6-len(items))
+
+    cs = player.stats.total_minions_killed + player.stats.neutral_minions_killed    
+    seconds = match.duration.total_seconds()    
+    cs_per_minute = round(cs/((seconds % 3600) // 60),1)
+
+    keystone = ''
+    for rune in player.runes:
+        if rune.is_keystone:
+            primary_tree= rune.path.name
+            keystone = rune
+        elif rune.path.name != primary_tree:
+            secondary_tree = rune.path
+    player_data={
+        'name': player.summoner.name,
+        'level': player.stats.level,
+        'role': '',
+        'kills': player.stats.kills,
+        'deaths': player.stats.deaths,
+        'assists': player.stats.assists,
+        'KDA': '{}/{}/{}'.format(player.stats.kills, player.stats.deaths, player.stats.assists),
+        'kill_ratio':'{}:1'.format( round(player.stats.kda,2)),
+        'multi_kill': None,
+        
+        'vision_score': player.stats.vision_score,
+        'cs': cs,
+        'csm': cs_per_minute,
+        'rank': rank_data,
+
+        'champion':{'name':player.champion.name, 'image':player.champion.image.url},
+        'spells': [{'name':player.summoner_spell_d.name,'image':player.summoner_spell_d.image.url}, 
+        {'name':player.summoner_spell_f.name,'image':player.summoner_spell_f.image.url}],
+        'runes': [{'image':keystone.image.url, 'name':keystone.name}, 
+                  {'image': secondary_tree.image_url, 'name': secondary_tree.name}
+                 ],
+        'items': items,
+        'trinket':trinket
+    }
+    return player_data
+
+def humanize_time(time):
+    days = time.days # Get Day 
+    hours,remainder = divmod(time.seconds,3600) # Get Hour 
+    minutes,seconds = divmod(remainder,60) # Get Minute & Second 
+    ans = ''
+    if days < 0:
+        if hours > 0:
+            ans += '{} hours '.format(hours)
+        elif minutes > 0:
+            ans += '{} minutes '.format(minutes)
+        else:
+            ans = '{} seconds '.format(seconds)
+    else:
+        ans = '{} days '.format(days)
+    ans += 'ago'
+    return ans
 
 def get_match(match_id, continent, name, region):
     match = cass.Match(id=match_id, continent=continent)
@@ -24,16 +101,21 @@ def get_match(match_id, continent, name, region):
     except:
         is_remake = False
 
+    seconds = match.duration.total_seconds()    
+    minutes = int((seconds % 3600) // 60)
+    seconds = int(seconds % 60)
+    duration = [minutes,seconds]
 
+    creation = humanize_time(arrow.utcnow() - match.creation)
     match_info = {
         'is_remake': is_remake,
-        'duration': match.duration,
-        'creation': match.creation,
-        'queue': match.queue.value,
+        'duration': '{}:{}'.format(int(duration[0]),int(duration[1])),
+        'creation': creation,
+        'queue': queue_to_string(match.queue.value),
         'tier_average':'not implemented'
     }
     summoner = None
-    participants ={}
+    participants =[]
     tier_acc = []
     for team in match.teams:
         players = {}
@@ -42,55 +124,27 @@ def get_match(match_id, continent, name, region):
             player_data = {}
             if player.summoner.name == name:
                 summoner = player
-                rank = player.summoner.ranks[match.queue]
-                items =[]
-                for item in player.stats.items:
-                    try:
-                        items.append({'name': item.name,'image':item.image.url}) # 'desc': item.description,
-
-                    except:
-                        items.append(None)
-                
-                player_data={
-                    'name': player.summoner.name,
-                    'level': player.stats.level,
-
-                    'kills': player.stats.kills,
-                    'deaths': player.stats.deaths,
-                    'assists': player.stats.assists,
-                    'KDA': '{}/{}/{}'.format(player.stats.kills, player.stats.deaths, player.stats.assists),
-                    'kill_ratio':'{}:1'.format( round(player.stats.kda,2)),
-                    'multi_kill': None,
-                    
-                    'vision_score': player.stats.vision_score,
-                    'cs': player.stats.total_minions_killed,
-                    'rank': [rank.tier.value,rank.division.value],
-
-                    'champion':{'name':player.champion.name, 'image':player.champion.image.url},
-                    'spells': [{'name':player.summoner_spell_d.name,'image':player.summoner_spell_d.image.url}, {'name':player.summoner_spell_f.name,'image':player.summoner_spell_f.image.url}],
-                    #'runes': player.runes,
-                    'items': items,
-                }
+                player_data = get_participant_data(match,player)
+                summoner_stats = player_data
             else:
                 player_data={
                     'name': player.summoner.name,
-                    'champion':{'name':player.champion.name, 'image':player.champion.image.url},}
+                    'champion':{'name':player.champion.name, 'image':player.champion.image.url}}
             players[player_data['name']] = player_data
-        participants[team.side.name] = players
+        participants.append(players)
 
     if summoner:
         if summoner.stats.win:
             match_info['win'] = 'WIN'
-
         else:
             match_info['win'] = 'LOSE'
-
         if match_info['is_remake']:
             match_info['win'] = 'REMAKE'
-        summoner_stats = participants[summoner.side.name][summoner.summoner.name]
+        
 
         
     match_data = {
+        'id':match_id, # we will 
         'match_info': match_info,
         'summoner_info': summoner_stats,
         'participants': participants
@@ -104,8 +158,8 @@ def get_match_history(summoner, start):
     puuid = summoner.puuid
     print(puuid)
     # queue={}
-    url_response = requests.get('https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count=5&api_key={}'
-                                .format(continent, puuid, start, CASSIOPEIA_RIOT_API_KEY))
+    url_response = requests.get('https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}&api_key={}'
+                                .format(continent, puuid, start, 1, CASSIOPEIA_RIOT_API_KEY))
 
     match_history = []
    # print(json.loads(url_response.text))
@@ -116,7 +170,8 @@ def get_match_history(summoner, start):
                 acc += char
         match = get_match(match_id, summoner.region.continent, summoner.name ,summoner.region)
         match_history.append(match)
-    print(len(match_history), match_history[0])
+    
+    
     return match_history
 
 

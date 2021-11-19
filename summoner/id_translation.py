@@ -31,3 +31,29 @@ def border_icon_id(level):
 
 def ranked_icon_id(tier):
     return tier
+
+def queue_to_string(queue):
+    ids = {
+    "RANKED_SOLO_5x5": 'Ranked Solo',  
+    "NORMAL_5V5_BLIND_PICK": 'Normal', 
+    "TEAM_BUILDER_DRAFT_UNRANKED_5x5":'Normal', 
+    "RANKED_FLEX_SR":'Ranked Flex',  
+    "ARAM": 'ARAM',  
+    "NORMAL_3X3_BLIND_PICK" : '3v3 Blind', 
+    
+    "CLASH":'Clash',  
+    "BOT_3X3_INTERMEDIATE":'Bots',  
+    "BOT_3X3_INTRO":'Intro Bots',  
+    "BOT_3X3_BEGINNER":'Beginner Bots',  
+    "BOT_5X5_INTRO":'Intro Bots',  
+    "BOT_5X5_BEGINNER" : 'Beginner Bots', 
+    "BOT_5X5_INTERMEDIATE": 'Intermediate Bots',  
+    "ARURF_5X5": 'URF', 
+
+    "TUTORIAL_1": 'TUTORIAL', 
+    "TUTORIAL_2" :'TUTORIAL', 
+    "TUTORIAL_3":'TUTORIAL',
+    }
+    if queue in ids:
+        return ids[queue]
+    return queue
