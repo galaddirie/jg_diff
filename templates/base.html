@@ -54,9 +54,14 @@
               <div class="navbar-nav flex-row text-center justify-content-end ">
                 <div class="navbar-social-media nav-item mx-lg-4 mx-1 my-auto ">
                    <!---TODO CHANGE TRIGGER TO FOCUS HOVER -->
-                  <a class="" id="popover" tabindex="0" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus">
+                  <div class="d-flex">
+                  <div class="nav-searchbar ms-auto" >
+                    {% if request.path != '/' %} {% include "searchbar.html" %} {% endif %} 
+                  </div>
+                  <a class="login-icon mx-3" id="popover" tabindex="0" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="focus">
                     <i class="fas fa-user-circle"></i>
                   </a>
+                  </div>
                 </div>
                 <!-- LANGUAGE-->
               </div>
@@ -100,9 +105,7 @@
                 </li> -->
       
               </ul>
-              <div class="nav-searchbar ms-auto" >
-                {% if request.path != '/' %} {% include "searchbar.html" %} {% endif %} 
-              </div>
+              
               
 
           

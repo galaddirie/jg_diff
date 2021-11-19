@@ -31,7 +31,8 @@ def get_participant_data(match, player):
     for item in player.stats.items:
         trinket ={'name':'', 'image': ''}
         try: 
-            items.append({'name': item.name,'image':item.image.url}) # 'desc': item.description,
+            print(item.description)
+            items.append({'name': item.name,'image':item.image.url,'desc': item.description, 'id':item.id}) # 'desc': item.description,
     
         except:
             ...
@@ -50,6 +51,7 @@ def get_participant_data(match, player):
         elif rune.path.name != primary_tree:
             secondary_tree = rune.path
     player_data={
+        'id':player.summoner.id,
         'name': player.summoner.name,
         'level': player.stats.level,
         'role': '',
@@ -81,7 +83,7 @@ def humanize_time(time):
     hours,remainder = divmod(time.seconds,3600) # Get Hour 
     minutes,seconds = divmod(remainder,60) # Get Minute & Second 
     ans = ''
-    if days < 0:
+    if days <= 0:
         if hours > 0:
             ans += '{} hours '.format(hours)
         elif minutes > 0:
@@ -128,8 +130,11 @@ def get_match(match_id, continent, name, region):
                 summoner_stats = player_data
             else:
                 player_data={
+                    'id':player.summoner.id,
                     'name': player.summoner.name,
-                    'champion':{'name':player.champion.name, 'image':player.champion.image.url}}
+                    'champion':{'name':player.champion.name, 'image':player.champion.image.url}
+                    }
+                    
             players[player_data['name']] = player_data
         participants.append(players)
 
@@ -268,6 +273,7 @@ def get_summoner_helper(request):
                     leagues['FLEX'] = get_league_entry(league)
             data = {
                 'name': summoner.name,
+                'region':region,
                 'level': summoner.level,
                 'rank': summoner.ranks,
                 'match_history': match_history,

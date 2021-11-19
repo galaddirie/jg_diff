@@ -48,7 +48,7 @@ h2 {
   box-shadow: none;
 }
 
-.navbar-social-media .fas{
+.navbar-social-media a .fas{
   font-size: 2em;
 
   color: white;
@@ -56,7 +56,7 @@ h2 {
 }
 
 
-.navbar-social-media:hover .fas{
+.login-icon :hover .fas{
   color: var(--yellow);
 }
 
@@ -508,8 +508,8 @@ color: var(--primary);
 }
 
 .champ-icon{
-  height: 75px; 
-  width:  75px; 
+  height: 50px; 
+  width:  50px; 
   border-radius: 50%;
 }
 
@@ -544,6 +544,8 @@ color: var(--primary);
   font-size: 12px;
 }
 .player-list-name{
+  text-decoration: none;
+  color: white;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -552,9 +554,16 @@ color: var(--primary);
   padding-left: 5px;
 }
 
+.player-list-name:hover{
+  color: var(--yellow);
+}
+
 .player-list-champ-icon-container{
   margin: 0;
   padding: 0;
+}
+.circle-img img{
+  border-radius: 50%;
 }
 .player-list-champ-icon{
   padding: 0;

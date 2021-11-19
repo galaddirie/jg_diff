@@ -49,7 +49,7 @@
                                         
                                         <div class="league-icon"><img src="{{ entries.icon }}" alt="{{entries.rank}}"></div> 
                                     </div>
-                                    <div class="me-3 text-left" style="width: 120px; ">
+                                    <div class="me-3 text-left" style="min-width: 130px;">
                                         <div class="rank-name">{{league}}Q</div>
                                         <div class="text-left" style="font-size: 1em;">
                                             <span class="rank-value">{{ entries.rank }} </span>
@@ -142,19 +142,24 @@
                                         </div>
                                     </div>
                                     <div class="champion-info d-flex align-items-center justify-content-center">
-                                        <div class="d-flex">
+                                        <div class="d-flex align-items-center">
                                             <div class="champ-icon bg-light" ><img class="champ-icon" src="{{match.summoner_info.champion.image}}" alt="{{match.summoner_info.champion.name}}"></div>
-                                            <div class="summoner-spells">
+                                            
+                                            <div class="d-flex">
+                                                <div>
                                                 {% for spell in match.summoner_info.spells%}
                                                     <div>
-                                                        <img style="width: 15px; height: 15px;" src="{{spell.image}}" alt="{{spell.name}}">
+                                                        <img style="width: 20px; height: 20px;" src="{{spell.image}}" alt="{{spell.name}}">
                                                     </div>
                                                 {%endfor%}
+                                                </div>
+                                                <div>
                                                 {% for tree in match.summoner_info.runes%}
                                                     <div>
-                                                        <img style="width: 15px; height: 15px;" src="{{tree.image}}" alt="{{tree.name}}">
+                                                        <img style="width: 20px; height: 20px;" src="{{tree.image}}" alt="{{tree.name}}">
                                                     </div>
                                                 {%endfor%}
+                                                </div>
                                             </div>
                                             <div class="runes" ></div>
                                         </div>
@@ -179,15 +184,23 @@
                                     <div class="items d-flex align-items-center">
                                         <div class="item-container row" >
                                             {% for item in match.summoner_info.items%}
-                                                {% if item %}
-                                                    <div class="item bg-light"><img  src="{{item.image}}" alt="{{item.name}}"></div>
+                                                {% if item %}                                                
+                                                    <div data-id={{item.id}} class="item bg-light" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{item.name}}"><img  src="{{item.image}}" alt="{{item.name}}"></div>
+                                                    
+                                                    <div id="{{item.id}}" style="display: none">
+                                                        {{item.desc}}
+                                                    </div>
                                                 {%else%}
                                                     <div class="item bg-light" style="background-color:red;"></div>
                                                 {%endif%}
+                                            
                                             {% endfor %}
                                             
                                         </div>
-                                        <div class="item bg-light" style="margin-left: 10px;"><img  src="{{match.summoner_info.trinket.image}}" alt="{{match.summoner_info.trinket.name}}"></div>
+                                        <div data-id={{match.summoner_info.trinket.id}} class="item bg-light" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{match.summoner_info.trinket.name}}" style="margin-left: 10px;"><img  src="{{match.summoner_info.trinket.image}}" alt="{{match.summoner_info.trinket.name}}"></div>
+                                        <div id="{{match.summoner_info.trinket.id}}" style="display: none">
+                                            {{match.summoner_info.trinket.desc}}
+                                        </div>
                                     </div>
                                     <div class="participants d-flex align-items-center">
                                         {% for team in match.participants%}
@@ -196,15 +209,19 @@
                                                 {% for player, player_data in team.items%}
                                                     
                                                     <div class="d-flex align-items-center">
-                                                        <div class=" player-list-champ-icon-container"><img class="player-list-champ-icon" src="{{player_data.champion.image}}" alt="{{player_data.champion.name}}"></div>
-                                                        <p class="player-list-name">{{player}}</p>
+                                                        <div class=" player-list-champ-icon-container {%if player == 0.name%} circle-img {% endif %} "><img class="player-list-champ-icon" src="{{player_data.champion.image}}" alt="{{player_data.champion.name}}"></div>
+                                                        <!--id="{{player_data.id}}" class="player-list-name" data-player-name="{{player}}"  data-player-region='{{0.region}}'-->
+                                                        <a class="player-list-name" href="/summoner/?username={{player}}&region={{0.region}}" >{{player}}</a>
                                                     </div>
                                                 {% endfor %}
                                             </div>
                                         </div>
                                         {%endfor%}
                                     </div>
-                                    <div class="match-details"></div>
+                                    <div class="match-details d-flex justify-content-center align-items-center">
+                                        
+                                            <button class="btn text-light"><i class="fas fa-angle-down" style="font-size: 2em;"></i></button>  
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
