@@ -6,9 +6,10 @@ import arrow
 from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, response
+from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
-
+from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from django_cassiopeia import cassiopeia as cass
 
@@ -32,7 +33,7 @@ def get_participant_data(match, player):
     for item in player.stats.items:
         trinket ={'name':'', 'image': ''}
         try: 
-            print(item.description)
+            
             items.append({'name': item.name,'image':item.image.url,'desc': sanitize_desc(item.description), 'id':item.id}) # 'desc': item.description,
     
         except:
@@ -83,7 +84,7 @@ def get_participant_data(match, player):
 
 
 
-def get_match(match_id, continent, name, region):
+def get_match(match_id, continent, name):
     match = cass.Match(id=match_id, continent=continent)
     match.load()
     try:
@@ -145,23 +146,15 @@ def get_match(match_id, continent, name, region):
     return match_data
 
 
-def get_match_history(summoner, start):
-    continent = summoner.region.continent.value.lower()
-    region_id = get_region_ids(summoner.region.value)
-    puuid = summoner.puuid
-    print(puuid)
-    # queue={}
+def get_match_history(name, puuid, continent,start):
+    
     url_response = requests.get('https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}&api_key={}'
-                                .format(continent, puuid, start, 2, CASSIOPEIA_RIOT_API_KEY))
-
+                                .format(continent.lower(), puuid, start, 10, CASSIOPEIA_RIOT_API_KEY))
+    print(url_response)
     match_history = []
    # print(json.loads(url_response.text))
     for match_id in json.loads(url_response.text):
-        acc = ''
-        for char in match_id:
-            if char.isdigit():
-                acc += char
-        match = get_match(match_id, summoner.region.continent, summoner.name ,summoner.region)
+        match = get_match(match_id, cass.data.Continent(continent), name)
         match_history.append(match)
     
     
@@ -247,7 +240,7 @@ def get_summoner_helper(request):
             # begin_time=cass.Patch.latest(region="NA").start
             # begin_index=0, end_index=21
             # check if it is ajax
-            match_history = get_match_history(summoner, 0)
+            match_history = get_match_history(summoner.name, summoner.puuid, summoner.region.continent.value, 0)
             match_info = get_recent_info(match_history)
             #
             leagues = {'SOLO': {'rank': 'Unranked', 'icon': get_rank_icon('unranked'), 'banner': get_rank_banner('unranked')},
@@ -260,7 +253,9 @@ def get_summoner_helper(request):
                 if league.queue.name == 'ranked_flex_fives':
                     leagues['FLEX'] = get_league_entry(league)
             data = {
+                'continent':summoner.region.continent.value,
                 'name': summoner.name,
+                'puuid': summoner.puuid,
                 'region':region,
                 'level': summoner.level,
                 'rank': summoner.ranks,
@@ -278,8 +273,20 @@ def get_summoner_helper(request):
 
 
 def get_summoner(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
-    # empty name
+    if is_ajax:
+        
+        
+        name = request.GET.get('username',None)
+        puuid = request.GET.get('puuid',None)
+        continent = request.GET.get('continent',None)
+        start = request.GET.get('start',None)
+        
+        match_history = get_match_history(name, puuid, continent, int(start))
+        rendered = render_to_string('summoner/match_history.html', {0:{'match_history': match_history}})
+        return HttpResponse(rendered)
+
     if request.GET['username'] == '':
         return render(request, 'summoner/player_page_empty.html')
 

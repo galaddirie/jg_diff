@@ -1,3 +1,4 @@
+from enum import Enum
 def get_region_ids(i):
 
     ids ={
@@ -69,6 +70,7 @@ def sanitize_desc(desc):
         elif not isTag:
             acc += char
     return acc
+
 def humanize_time(time):
     days = time.days # Get Day 
     hours,remainder = divmod(time.seconds,3600) # Get Hour 
@@ -90,3 +92,8 @@ def num_to_multikill(num):
     multi_kills = [None, None,'Double', 'Triple', 'Quadra', 'Penta'] 
     
     return multi_kills[num]
+
+class Continent(Enum):
+    americas = "AMERICAS"
+    asia = "ASIA"
+    europe = "EUROPE"
