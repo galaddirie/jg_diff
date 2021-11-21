@@ -18,14 +18,7 @@ var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggl
 var popoverList = popoverTriggerList.map(
   function (popoverTriggerEl) {
     var options = {}
-    if(popoverTriggerEl.classList.contains('item')){
-      console.log(document.getElementById(popoverTriggerEl.getAttribute('data-id')))
-      var itemContent = ''
-      options = {
-        html : true,
-        content: function(){return itemContent},
-      } 
-    }  
+      
   return new bootstrap.Popover(popoverTriggerEl,options)
 })
 
@@ -70,4 +63,13 @@ function playerLinkLoad(player,region,id){
   let url = '/summoner/?username='+username + '&region='+ region
   console.log(el)
   el.href = url
+}
+
+/// MATCH DETAILS
+function detailsExpand(id){
+  match = document.getElementById(id)
+  matchDetails = match.children[1]
+  matchDetails.hidden = !matchDetails.hidden
+
+  
 }

@@ -16,6 +16,7 @@ DRAGON = 'https://raw.communitydragon.org/latest/plugins/'
 
 # MATCH HISORY HELPERS
 
+
 def get_participant_data(match, player):
     """
     Helper for get_match()
@@ -32,7 +33,7 @@ def get_participant_data(match, player):
         trinket ={'name':'', 'image': ''}
         try: 
             print(item.description)
-            items.append({'name': item.name,'image':item.image.url,'desc': item.description, 'id':item.id}) # 'desc': item.description,
+            items.append({'name': item.name,'image':item.image.url,'desc': sanitize_desc(item.description), 'id':item.id}) # 'desc': item.description,
     
         except:
             ...
@@ -50,6 +51,8 @@ def get_participant_data(match, player):
             keystone = rune
         elif rune.path.name != primary_tree:
             secondary_tree = rune.path
+    multi_kill = num_to_multikill(player.stats.largest_multi_kill)
+    
     player_data={
         'id':player.summoner.id,
         'name': player.summoner.name,
@@ -60,7 +63,7 @@ def get_participant_data(match, player):
         'assists': player.stats.assists,
         'KDA': '{}/{}/{}'.format(player.stats.kills, player.stats.deaths, player.stats.assists),
         'kill_ratio':'{}:1'.format( round(player.stats.kda,2)),
-        'multi_kill': None,
+        'multi_kill': multi_kill,
         
         'vision_score': player.stats.vision_score,
         'cs': cs,
@@ -78,22 +81,7 @@ def get_participant_data(match, player):
     }
     return player_data
 
-def humanize_time(time):
-    days = time.days # Get Day 
-    hours,remainder = divmod(time.seconds,3600) # Get Hour 
-    minutes,seconds = divmod(remainder,60) # Get Minute & Second 
-    ans = ''
-    if days <= 0:
-        if hours > 0:
-            ans += '{} hours '.format(hours)
-        elif minutes > 0:
-            ans += '{} minutes '.format(minutes)
-        else:
-            ans = '{} seconds '.format(seconds)
-    else:
-        ans = '{} days '.format(days)
-    ans += 'ago'
-    return ans
+
 
 def get_match(match_id, continent, name, region):
     match = cass.Match(id=match_id, continent=continent)
@@ -104,14 +92,14 @@ def get_match(match_id, continent, name, region):
         is_remake = False
 
     seconds = match.duration.total_seconds()    
-    minutes = int((seconds % 3600) // 60)
-    seconds = int(seconds % 60)
+    minutes = str(int((seconds % 3600) // 60)).zfill(2)
+    seconds = str(int(seconds % 60)).zfill(2)
     duration = [minutes,seconds]
 
     creation = humanize_time(arrow.utcnow() - match.creation)
     match_info = {
         'is_remake': is_remake,
-        'duration': '{}:{}'.format(int(duration[0]),int(duration[1])),
+        'duration': '{}:{}'.format(duration[0],duration[1]),
         'creation': creation,
         'queue': queue_to_string(match.queue.value),
         'tier_average':'not implemented'
@@ -164,7 +152,7 @@ def get_match_history(summoner, start):
     print(puuid)
     # queue={}
     url_response = requests.get('https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}&api_key={}'
-                                .format(continent, puuid, start, 1, CASSIOPEIA_RIOT_API_KEY))
+                                .format(continent, puuid, start, 2, CASSIOPEIA_RIOT_API_KEY))
 
     match_history = []
    # print(json.loads(url_response.text))

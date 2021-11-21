@@ -57,3 +57,36 @@ def queue_to_string(queue):
     if queue in ids:
         return ids[queue]
     return queue
+def sanitize_desc(desc):
+    acc = ''
+    isTag = False
+    for char in desc:
+        if char == '<':
+            isTag = True
+        if char == '>':
+            isTag = False
+            acc += ' '
+        elif not isTag:
+            acc += char
+    return acc
+def humanize_time(time):
+    days = time.days # Get Day 
+    hours,remainder = divmod(time.seconds,3600) # Get Hour 
+    minutes,seconds = divmod(remainder,60) # Get Minute & Second 
+    ans = ''
+    if days <= 0:
+        if hours > 0:
+            ans += '{} hours '.format(hours)
+        elif minutes > 0:
+            ans += '{} minutes '.format(minutes)
+        else:
+            ans = '{} seconds '.format(seconds)
+    else:
+        ans = '{} days '.format(days)
+    ans += 'ago'
+    return ans
+
+def num_to_multikill(num):
+    multi_kills = [None, None,'Double', 'Triple', 'Quadra', 'Penta'] 
+    
+    return multi_kills[num]
