@@ -53,7 +53,17 @@ def get_participant_data(match, player):
         elif rune.path.name != primary_tree:
             secondary_tree = rune.path
     multi_kill = num_to_multikill(player.stats.largest_multi_kill)
-    
+    solo_rank = 'UNRANKED'
+    for league in player.summoner.league_entries:
+        try:
+            if league.queue.name == 'ranked_solo_fives':
+                solo_rank =league.tier.value.capitalize()+' '+league.division.value
+            else:
+                solo_rank = 'UNRANKED'
+        except:
+            ...
+
+
     player_data={
         'id':player.summoner.id,
         'name': player.summoner.name,
@@ -69,7 +79,7 @@ def get_participant_data(match, player):
         'vision_score': player.stats.vision_score,
         'cs': cs,
         'csm': cs_per_minute,
-        'rank': rank_data,
+        'rank': solo_rank,
 
         'champion':{'name':player.champion.name, 'image':player.champion.image.url},
         'spells': [{'name':player.summoner_spell_d.name,'image':player.summoner_spell_d.image.url}, 
@@ -113,14 +123,14 @@ def get_match(match_id, continent, name):
         # we should only initially load for main player unless player clicks on more details
         for player in team.participants:
             player_data = {}
+            
+            player_data = get_participant_data(match,player)
+            players[player_data['name']] = player_data
             if player.summoner.name == name:
                 summoner = player
-                player_data = get_participant_data(match,player)
                 summoner_stats = player_data
-            else:
-                player_data=get_participant_data(match, player)
                     
-            players[player_data['name']] = player_data
+            
         participants.append(players)
 
     if summoner:
@@ -150,8 +160,11 @@ def get_match_history(name, puuid, continent,start):
     match_history = []
    # print(json.loads(url_response.text))
     for match_id in json.loads(url_response.text):
+        
         match = get_match(match_id, cass.data.Continent(continent), name)
         match_history.append(match)
+        
+        
     
     
     return match_history
