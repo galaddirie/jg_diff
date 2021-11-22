@@ -498,11 +498,11 @@ color: var(--primary);
   display: flex;
   align-items: center;
   padding: 10px;
-  min-height: 120px;
+  min-height: fit-content;
   margin-top: 20px;
-  border-radius: 60px; 
+  border-radius: 56px; 
   border: 1px solid rgba(255, 255, 255, 0.158);
-  overflow: hidden;
+  
   transition: .2s ease;
 }
 
@@ -510,20 +510,50 @@ color: var(--primary);
   height: 100%;
 }
 
+.match-details-btn{
+ 
+}
+
+.match-details-btn:hover button i{
+  color: var(--yellow);
+}
+
+
+
+@keyframes rotate-btn {
+  100%{
+    
+  }
+}
+
 .match-details{
-  height: 300px; 
+  margin-top: 10px;
+  height: fit-content; 
   width: 90%;
   border-top: 1px solid rgba(255, 255, 255, 0.158);
   transition: .2s ease;
+}
+
+.game-table{
+  font-size: 11px;
 }
 
 .champ-icon{
   height: 50px; 
   width:  50px; 
   border-radius: 50%;
+  border: 2px solid var(--yellow);
+  margin: 2px;
+  
+}
+.champ-icon {
+  
 }
 
 /*PLAYER STATS*/
+.player-stats{
+  width: 75px;
+}
 .multikill{
   background-color: crimson; 
   
@@ -536,7 +566,13 @@ color: var(--primary);
 }
 /*item list*/
 .items{
+  position: relative;
+  left: 10px;
   width: 105px;
+}
+
+.item-container{
+  
 }
 
 .item{
@@ -563,6 +599,7 @@ color: var(--primary);
   white-space: nowrap;
   overflow: hidden;
   width: 60px;
+  height: fit-content;
   margin: 0;
   padding-left: 5px;
 }
@@ -580,7 +617,7 @@ color: var(--primary);
 .isSummoner-player-list img{
   border-radius: 50%;
   background-color: var(--red);
-  border: 1px solid var(--yellow);
+  border: 2px solid var(--yellow);
 }
 
 .player-list-champ-icon{

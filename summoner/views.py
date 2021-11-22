@@ -118,11 +118,7 @@ def get_match(match_id, continent, name):
                 player_data = get_participant_data(match,player)
                 summoner_stats = player_data
             else:
-                player_data={
-                    'id':player.summoner.id,
-                    'name': player.summoner.name,
-                    'champion':{'name':player.champion.name, 'image':player.champion.image.url}
-                    }
+                player_data=get_participant_data(match, player)
                     
             players[player_data['name']] = player_data
         participants.append(players)
@@ -149,7 +145,7 @@ def get_match(match_id, continent, name):
 def get_match_history(name, puuid, continent,start):
     
     url_response = requests.get('https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}&api_key={}'
-                                .format(continent.lower(), puuid, start, 10, CASSIOPEIA_RIOT_API_KEY))
+                                .format(continent.lower(), puuid, start, 1, CASSIOPEIA_RIOT_API_KEY))
     print(url_response)
     match_history = []
    # print(json.loads(url_response.text))

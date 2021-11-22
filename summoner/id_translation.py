@@ -48,12 +48,16 @@ def queue_to_string(queue):
     "BOT_3X3_BEGINNER":'Beginner Bots',  
     "BOT_5X5_INTRO":'Intro Bots',  
     "BOT_5X5_BEGINNER" : 'Beginner Bots', 
-    "BOT_5X5_INTERMEDIATE": 'Intermediate Bots',  
+    "BOT_5X5_INTERMEDIATE": 'Intermediate Bots',
+    
+      
     "ARURF_5X5": 'URF', 
-
+    'ULTIMATE_SPELLBOOK':'Ultimates',
     "TUTORIAL_1": 'TUTORIAL', 
     "TUTORIAL_2" :'TUTORIAL', 
     "TUTORIAL_3":'TUTORIAL',
+
+
     }
     if queue in ids:
         return ids[queue]
@@ -93,7 +97,3 @@ def num_to_multikill(num):
     
     return multi_kills[num]
 
-class Continent(Enum):
-    americas = "AMERICAS"
-    asia = "ASIA"
-    europe = "EUROPE"

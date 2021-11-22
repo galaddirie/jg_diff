@@ -1,5 +1,5 @@
 {% for match in 0.match_history%}
-<div id="{{match.id}}" class="match-card bg-dark d-flex flex-column align-items-center justify-content-center" data-game-id="{{match.id}}" data-victory-status="{{match.match_info.win}}">
+<div id="{{match.id}}" class="match-card bg-dark d-flex flex-column  " data-game-id="{{match.id}}" data-victory-status="{{match.match_info.win}}">
     <div class="match-content d-flex justify-content-between px-4" style="font-size: 12px; width: 100%; ">
         <div class="match-info text-center d-flex align-items-center">
             <div>
@@ -10,7 +10,8 @@
         </div>
         <div class="champion-info d-flex align-items-center justify-content-center">
             <div class="d-flex align-items-center">
-                <div class="champ-icon bg-light" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{match.summoner_info.champion.name}}"><img class="champ-icon" src="{{match.summoner_info.champion.image}}" alt="{{match.summoner_info.champion.name}}"></div>
+                
+                <div class="" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{match.summoner_info.champion.name}}"><img class="champ-icon" src="{{match.summoner_info.champion.image}}" alt="{{match.summoner_info.champion.name}}"></div>
                 
                 <div class="d-flex">
                     <div>
@@ -52,19 +53,19 @@
             <div class="item-container row" >
                 {% for item in match.summoner_info.items%}
                     {% if item %}                                                
-                        <div data-id={{item.id}} class="item bg-light" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{item.name}}" data-bs-content="{{item.desc}}"><img  src="{{item.image}}" alt="{{item.name}}"></div>
+                        <div data-id={{item.id}} class="item" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{item.name}}" data-bs-content="{{item.desc}}"><img  src="{{item.image}}" alt="{{item.name}}"></div>
                         
                         <!-- <div id="{{item.id}}" style="display: none">
                             {{item.desc}}
                         </div> -->
                     {%else%}
-                        <div class="item bg-light"></div>
+                        <div class="item bg-secondary"></div>
                     {%endif%}
                 
                 {% endfor %}
                 
             </div>
-            <div data-id={{match.summoner_info.trinket.id}} class="item bg-light" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{match.summoner_info.trinket.name}}" style="margin-left: 10px;"><img  src="{{match.summoner_info.trinket.image}}" alt="{{match.summoner_info.trinket.name}}"></div>
+            <div data-id={{match.summoner_info.trinket.id}} class="item" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{match.summoner_info.trinket.name}}" style="margin-left: 10px;"><img  src="{{match.summoner_info.trinket.image}}" alt="{{match.summoner_info.trinket.name}}"></div>
             <div id="{{match.summoner_info.trinket.id}}" style="display: none">
                 {{match.summoner_info.trinket.desc}}
             </div>
@@ -87,13 +88,104 @@
             </div>
             {%endfor%}
         </div>
-        <div class="match-details-btn d-flex justify-content-center align-items-center">
+        <div class="match-details-btn d-flex justify-content-center align-items-center" > 
             
                 <button class="btn text-light" onclick="detailsExpand('{{match.id}}')"><i class="fas fa-angle-down" style="font-size: 2em;"></i></button>  
         </div>
     </div>
-    <div hidden class="match-details mt-3">
-        
+    <div hidden class="match-details ">
+        <div class="game-table-wrapper"> 
+            {% for team in match.participants%}
+            <div class="game-table result-WIN">
+                <table class="table table-dark table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 120px;">TEAM</th>
+                            <th scope="col">Tier</th>
+                            <th scope="col">KDA</th>
+                            <th scope="col">Damage</th>
+                            <th scope="col">CS</th>
+                            <th scope="col">Wards</th>
+                            <th scope="col">Items</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for player, player_data in team.items%}
+                        <tr >
+                            <td>
+                                <div class="d-flex align-item-center justify-content-center">
+                                    <div class="d-flex align-item-center justify-content-center {%if player == 0.name%} isSummoner-player-list {% endif %}" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{player_data.champion.name}}">
+                                        <img style="width: 30px; height: 30px; border-radius: 50%;" src="{{player_data.champion.image}}" alt="{{player_data.name}}">
+                                    </div>
+                                    <div class="d-flex">
+                                        <div>
+                                        {% for spell in player_data.spells%}
+                                            <div style="width: 15px; height: 15px; margin: 0;" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{spell.name}}">
+                                                <img  style="width: 15px; height: 15px; margin: 0;" src="{{spell.image}}" alt="{{spell.name}}">
+                                            </div>
+                                        {%endfor%}
+                                        </div>
+                                        <div>
+                                        {% for tree in player_data.runes%}
+                                            <div style="width: 15px; height: 15px; margin: 0;" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{tree.name}}">
+                                                <img style="width: 15px; height: 15px; margin: 0;" src="{{tree.image}}" alt="{{tree.name}}">
+                                            </div>
+                                        {%endfor%}
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-item-center justify-content-center">
+                                        <a class="player-list-name my-auto" href="/summoner/?username={{player}}&region={{0.region}}" style="font-size: 12px; width: 75px;" >{{player}}</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 110px; padding: 4px;"><div>GRAND MASTER I</div></td>
+                            <td style="width: 75px;">
+                                <div class="KDA" style="font-size: 12px;">{{player_data.KDA}}</div>
+                                <div class="KDA-ratio">{{player_data.kill_ratio}} KDA</div>
+                            </td>
+                            <td style="width: 90px;">@mdo</td>
+                            <td>
+                                <div>{{player_data.cs}}</div>
+                                <div >({{player_data.csm}})</div>
+                            </td>
+                            <td>
+                               <div class="text-center">
+                                   <div tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-html='true' data-bs-content="<p>Control wards</p><p>Wards Placed</p><p>Wards Killed</p>">
+                                       1
+                                   </div>
+                                   <div>1/12</div>
+                               </div> 
+                            </td>
+                            <td >
+                                <div class="d-flex align-items-center ">
+                                    <div class="d-flex" >
+                                    {% for item in player_data.items%}
+                                        {% if item %}                                                
+                                            <div data-id={{item.id}} class="item" style="margin: 2px;" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{item.name}}">
+                                                <img  src="{{item.image}}" alt="{{item.name}}">
+                                            </div>
+                                            
+                                            
+                                        {%else%}
+                                            <div style="margin: 2px;" class="item bg-secondary"></div>
+                                        {%endif%}
+                                    
+                                    {% endfor %}
+                                    
+                                    </div>
+                                    <div data-id={{player_data.trinket.id}} class="item" style="margin: 0;"  tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{player_data.trinket.name}}" style="margin-left: 10px;">
+                                    <img  src="{{player_data.trinket.image}}" alt="{{player_data.trinket.name}}">
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                        
+                </table>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endfor %}

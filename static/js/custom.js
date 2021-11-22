@@ -2,7 +2,7 @@ let timer;
 var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
 var popoverList = popoverTriggerList.map(
   function (popoverTriggerEl) {
-    var options = {}
+    var options = {animation:false}
       
   return new bootstrap.Popover(popoverTriggerEl,options)
 })
@@ -55,28 +55,38 @@ function detailsExpand(id){
   match = document.getElementById(id)
   matchDetails = match.children[1]
   matchDetails.hidden = !matchDetails.hidden
-
+  btn = match.children[0].children[6]
+  if (matchDetails.hidden){
+    btn.children[0].children[0].classList = 'fas fa-angle-down'
+  }else{
+    btn.children[0].children[0].classList = 'fas fa-angle-up'
+  }
 
 }
 let matchHistory = document.getElementById('match-history')
 
 var isLoading = false;
+let loadMatchesbtn = document.getElementById('loadMatches')
 function loadMatchHistory(){
-  player = document.getElementById('Player-Info')
-  //console.log(player)
-  username = player.getAttribute('data-name')
-  puuid = player.getAttribute('data-puuid')
-  continent = player.getAttribute('data-continent')
-  start = matchHistory.children.length
+  
   if (!isLoading) {
+    isLoading = true;
+    loadMatchesbtn.classList.add('disabled')
+    player = document.getElementById('Player-Info')
+    //console.log(player)
+    username = player.getAttribute('data-name')
+    puuid = player.getAttribute('data-puuid')
+    continent = player.getAttribute('data-continent')
+    start = matchHistory.children.length
     ajaxHelper( puuid, continent, start)
+    
   }
   
 }
 
 
 function ajaxHelper( puuid, continent, start){
-  isLoading = true;
+  
   $.ajax({
     type: "GET",
     
@@ -107,7 +117,15 @@ function ajaxHelper( puuid, continent, start){
     complete: function () {
         clearTimeout(timer); 
         console.log('END')
-        isLoading = false;  
+        isLoading = false;
+        loadMatchesbtn.classList.remove('disabled')  
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(
+          function (popoverTriggerEl) {
+            var options = {animation:false}
+              
+          return new bootstrap.Popover(popoverTriggerEl,options)
+        })
     },
   });
 }
