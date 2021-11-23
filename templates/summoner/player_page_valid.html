@@ -5,9 +5,7 @@
     
     <!-- <h1>{{ api_request }}</h1> -->
     <main>
-        <div class="container update-btn">
-            <button class="btn btn-md btn-danger">UPDATE</button>
-        </div>
+        
 
 
         <section id="Player-Info" data-puuid="{{0.puuid}}" data-continent="{{0.continent}}" data-name="{{0.name}}">
@@ -132,7 +130,7 @@
                             </div>
                         </div>
                         <div id="match-history" >
-                            {% include "summoner/match_history.html" %}
+                            {% include "summoner/match_card.html" %}
                         </div>
                         <div class="d-flex justify-content-center ">
                             <button id="loadMatches" class="btn btn-large btn-primary mt-4" onclick="loadMatchHistory()"> Load More</button>

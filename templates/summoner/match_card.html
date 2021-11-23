@@ -71,7 +71,7 @@
             </div>
         </div>
         <div class="participants d-flex align-items-center">
-            {% for team in match.participants%}
+            {% for team_side, team in match.participants.items%}
             <div class="Team">
                 <div class="player-list me-2">
                     {% for player, player_data in team.items%}
@@ -95,12 +95,13 @@
     </div>
     <div hidden class="match-details ">
         <div class="game-table-wrapper"> 
-            {% for team in match.participants%}
+            
+            {% for team_side, team in match.participants.items%}
             <div class="game-table result-WIN">
                 <table class="table table-dark table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col" style="width: 120px;">TEAM</th>
+                            <th scope="col" style="width: 120px;">{{team_side}} team</th>
                             <th scope="col">Tier</th>
                             <th scope="col">KDA</th>
                             <th scope="col">Damage</th>
@@ -111,7 +112,7 @@
                         </thead>
                         <tbody>
                         {% for player, player_data in team.items%}
-                        <tr >
+                        <tr class="p-0">
                             <td>
                                 <div class="d-flex align-item-center justify-content-center">
                                     <div class="d-flex align-item-center justify-content-center {%if player == 0.name%} isSummoner-player-list {% endif %}" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{player_data.champion.name}}">
@@ -143,17 +144,17 @@
                                 <div class="KDA" style="font-size: 12px;">{{player_data.KDA}}</div>
                                 <div class="KDA-ratio">{{player_data.kill_ratio}} KDA</div>
                             </td>
-                            <td style="width: 90px;">@mdo</td>
+                            <td>{{player_data.damage}} </td>
                             <td>
                                 <div>{{player_data.cs}}</div>
                                 <div >({{player_data.csm}})</div>
                             </td>
                             <td>
-                               <div class="text-center" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-html='true' data-bs-content="<p>Control wards</p><p>Wards Placed</p><p>Wards Killed</p>">
+                               <div class="text-center" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-html='true' data-bs-content="<p>Control wards: {{player_data.control_wards}}</p><p>Wards Placed: {{player_data.wards_placed}}</p><p>Wards Killed: {{player_data.wards_killed}}</p>">
                                    <div >
-                                       1
+                                       {{player_data.control_wards}}
                                    </div>
-                                   <div>1/12</div>
+                                   <div>{{player_data.wards_placed}}/{{player_data.wards_killed}}</div>
                                </div> 
                             </td>
                             <td >

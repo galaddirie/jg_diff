@@ -24,11 +24,6 @@ def get_participant_data(match, player):
     """
     player_data = {}
     
-    rank_data =[]
-    if match.game_type == 'ranked':
-        rank = player.summoner.ranks[match.queue]
-        rank_data=[rank.tier.value,rank.division.value]
-    
     items =[]
     for item in player.stats.items:
         trinket ={'name':'', 'image': ''}
@@ -46,23 +41,34 @@ def get_participant_data(match, player):
     cs_per_minute = round(cs/((seconds % 3600) // 60),1)
 
     keystone = ''
-    for rune in player.runes:
-        if rune.is_keystone:
-            primary_tree= rune.path.name
-            keystone = rune
-        elif rune.path.name != primary_tree:
-            secondary_tree = rune.path
-    multi_kill = num_to_multikill(player.stats.largest_multi_kill)
-    solo_rank = 'UNRANKED'
-    for league in player.summoner.league_entries:
-        try:
+    runes = []
+    try:
+        for rune in player.runes:
+            if rune.is_keystone:
+                primary_tree= rune.path.name
+                keystone = rune
+            elif rune.path.name != primary_tree:
+                secondary_tree = rune.path
+        runes = [{'image':keystone.image.url, 'name':keystone.name}, 
+                  {'image': secondary_tree.image_url, 'name': secondary_tree.name}]
+    except:
+        ...
+    
+    solo_rank = 'Unranked'
+    try:
+        for league in player.summoner.league_entries:
+        
             if league.queue.name == 'ranked_solo_fives':
                 solo_rank =league.tier.value.capitalize()+' '+league.division.value
-            else:
-                solo_rank = 'UNRANKED'
-        except:
-            ...
+    except:
+        ...
 
+    spells = []
+    try:
+        spells = [{'name':player.summoner_spell_d.name,'image':player.summoner_spell_d.image.url}, 
+        {'name':player.summoner_spell_f.name,'image':player.summoner_spell_f.image.url}]
+    except:
+        ...
 
     player_data={
         'id':player.summoner.id,
@@ -74,24 +80,26 @@ def get_participant_data(match, player):
         'assists': player.stats.assists,
         'KDA': '{}/{}/{}'.format(player.stats.kills, player.stats.deaths, player.stats.assists),
         'kill_ratio':'{}:1'.format( round(player.stats.kda,2)),
-        'multi_kill': multi_kill,
-        
+        'multi_kill': num_to_multikill(player.stats.largest_multi_kill),
+        'damage':"{:,}".format(player.stats.total_damage_dealt_to_champions),
+        'damage_literal':int(player.stats.total_damage_dealt_to_champions),
+        'damage_percentage':'',
         'vision_score': player.stats.vision_score,
         'cs': cs,
         'csm': cs_per_minute,
         'rank': solo_rank,
-
+        'wards_placed':player.stats.wards_placed,
+        'wards_killed':player.stats.wards_killed,
+        'control_wards':player.stats.vision_wards_placed,
         'champion':{'name':player.champion.name, 'image':player.champion.image.url},
-        'spells': [{'name':player.summoner_spell_d.name,'image':player.summoner_spell_d.image.url}, 
-        {'name':player.summoner_spell_f.name,'image':player.summoner_spell_f.image.url}],
-        'runes': [{'image':keystone.image.url, 'name':keystone.name}, 
-                  {'image': secondary_tree.image_url, 'name': secondary_tree.name}
-                 ],
+        'spells': spells,
+        'runes': runes,
         'items': items,
-        'trinket':trinket
+        'trinket':trinket,
+        'team':player.team.name,
+        'enemy_team':player.enemy_team.name
     }
     return player_data
-
 
 
 def get_match(match_id, continent, name):
@@ -106,8 +114,8 @@ def get_match(match_id, continent, name):
     minutes = str(int((seconds % 3600) // 60)).zfill(2)
     seconds = str(int(seconds % 60)).zfill(2)
     duration = [minutes,seconds]
-
     creation = humanize_time(arrow.utcnow() - match.creation)
+    
     match_info = {
         'is_remake': is_remake,
         'duration': '{}:{}'.format(duration[0],duration[1]),
@@ -116,22 +124,27 @@ def get_match(match_id, continent, name):
         'tier_average':'not implemented'
     }
     summoner = None
-    participants =[]
+    participants = {}
     tier_acc = []
+    max_damage = 0
     for team in match.teams:
         players = {}
         # we should only initially load for main player unless player clicks on more details
+        
         for player in team.participants:
             player_data = {}
-            
             player_data = get_participant_data(match,player)
-            players[player_data['name']] = player_data
+        
+            if player_data['damage_literal'] > max_damage:
+                max_damage= player_data['damage_literal'] 
+                        
             if player.summoner.name == name:
                 summoner = player
                 summoner_stats = player_data
+            players[player_data['name']] = player_data
                     
             
-        participants.append(players)
+        participants[team.side.name] = players
 
     if summoner:
         if summoner.stats.win:
@@ -147,7 +160,8 @@ def get_match(match_id, continent, name):
         'id':match_id, # we will 
         'match_info': match_info,
         'summoner_info': summoner_stats,
-        'participants': participants
+        'participants': participants,
+        'max_damage': max_damage
     }
     return match_data
 
@@ -293,7 +307,7 @@ def get_summoner(request):
         start = request.GET.get('start',None)
         
         match_history = get_match_history(name, puuid, continent, int(start))
-        rendered = render_to_string('summoner/match_history.html', {0:{'match_history': match_history}})
+        rendered = render_to_string('summoner/match_card.html', {0:{'match_history': match_history}})
         return HttpResponse(rendered)
 
     if request.GET['username'] == '':

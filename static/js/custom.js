@@ -13,7 +13,7 @@ let loginPopover = (
     var popoverContent = document.getElementById('popover-content').innerHTML;
     
     var popoverOptions = {
-      trigger: 'focus',
+      trigger: 'hover focus',
       html:true,
       content: function(){
         return popoverContent
