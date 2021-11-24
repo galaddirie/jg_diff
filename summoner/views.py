@@ -96,8 +96,7 @@ def get_participant_data(match, player):
         'runes': runes,
         'items': items,
         'trinket':trinket,
-        'team':player.team.name,
-        'enemy_team':player.enemy_team.name
+        'teams':[player.team.side.name, player.enemy_team.side.name]
     }
     return player_data
 
@@ -127,9 +126,10 @@ def get_match(match_id, continent, name):
     participants = {}
     tier_acc = []
     max_damage = 0
+    # THIS ENTIRE TEAM SECTION IS BAD, BUT Is It BETTER THAN HAVE DUPLICATE HTML? yes 
     for team in match.teams:
         players = {}
-        # we should only initially load for main player unless player clicks on more details
+        
         
         for player in team.participants:
             player_data = {}
@@ -146,6 +146,17 @@ def get_match(match_id, continent, name):
             
         participants[team.side.name] = players
 
+    teams = [
+                [summoner_stats['teams'][0], participants[summoner_stats['teams'][0]]],
+                [summoner_stats['teams'][1], participants[summoner_stats['teams'][1]]]
+            ]
+
+    teamObj = {
+        'name':'',
+        'victory-status': '',
+        'players':''
+    }
+                
     if summoner:
         if summoner.stats.win:
             match_info['win'] = 'WIN'
@@ -161,6 +172,7 @@ def get_match(match_id, continent, name):
         'match_info': match_info,
         'summoner_info': summoner_stats,
         'participants': participants,
+        'teams': teams,
         'max_damage': max_damage
     }
     return match_data
@@ -307,7 +319,7 @@ def get_summoner(request):
         start = request.GET.get('start',None)
         
         match_history = get_match_history(name, puuid, continent, int(start))
-        rendered = render_to_string('summoner/match_card.html', {0:{'match_history': match_history}})
+        rendered = render_to_string('summoner/match_card.html', {0:{'match_history': match_history ,'name':name}})
         return HttpResponse(rendered)
 
     if request.GET['username'] == '':
