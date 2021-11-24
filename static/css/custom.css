@@ -501,23 +501,67 @@ color: var(--primary);
   min-height: fit-content;
   margin-top: 20px;
   border-radius: 56px; 
-  border: 1px solid rgba(255, 255, 255, 0.158);
+  
   width: 775px;
   transition: .2s ease;
 }
+
+.match-details{
+  margin-top: 10px;
+  height: fit-content;
+  padding: 10px; 
+  width: 95%;
+  border-top: 1px solid rgba(255, 255, 255, 0.158);
+  transition: .2s ease;
+}
+
+.result-WIN{
+  background-image: linear-gradient(to right, #0d7091, rgba(65, 65, 65, 0));
+  
+}
+
+.result-LOSE{
+  background-image: linear-gradient(to right,rgb(107, 19, 45), rgba(29, 29, 29, 0));
+}
+
+.game-table{
+  padding: 5px;
+  font-size: 11px;
+}
+
+.game-table-wrapper.result-LOSE .game-table:last-child{
+  background-image: linear-gradient(to right,#0d7091, rgba(29, 29, 29, 0));
+}
+
+.game-table-wrapper.result-WIN .game-table:last-child{
+  background-image: linear-gradient(to right,rgb(107, 19, 45), rgba(29, 29, 29, 0));
+}
+
+
 
 .match-content{
   height: 100%;
 }
 
-.match-details-btn{
- 
-}
+
 
 .match-details-btn:hover button i{
   color: var(--yellow);
 }
 
+.isSummoner-match-details-container{
+  background-color: rgba(255, 217, 0, 0.356);
+  border: 2px solid var(--yellow);
+}
+
+
+.game-table tbody tr:hover{
+  background-color: rgba(255, 255, 255, 0.13);
+}
+
+.game-table tbody tr.isSummoner-match-details-container:hover{
+  background-color: rgba(255, 217, 0, 0.685);
+}
 
 
 @keyframes rotate-btn {
@@ -526,17 +570,9 @@ color: var(--primary);
   }
 }
 
-.match-details{
-  margin-top: 10px;
-  height: fit-content; 
-  width: 90%;
-  border-top: 1px solid rgba(255, 255, 255, 0.158);
-  transition: .2s ease;
-}
 
-.game-table{
-  font-size: 11px;
-}
+
+
 
 .champ-icon{
   height: 50px; 
@@ -546,9 +582,7 @@ color: var(--primary);
   margin: 2px;
   
 }
-.champ-icon {
-  
-}
+
 
 /*PLAYER STATS*/
 .player-stats{
@@ -620,18 +654,6 @@ color: var(--primary);
   border: 2px solid var(--yellow);
 }
 
-.isSummoner-match-details-container{
-  background-color: rgba(255, 217, 0, 0.356);
-  border: 2px solid var(--yellow);
-}
-
-.game-table tbody tr:hover{
-  background-color: rgba(255, 255, 255, 0.13);
-}
-
-.game-table tbody tr.isSummoner-match-details-container:hover{
-  background-color: rgba(255, 217, 0, 0.548);
-}
 
 .player-list-champ-icon{
   padding: 0;

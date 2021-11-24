@@ -1,11 +1,11 @@
 {% for match in 0.match_history%}
-<div id="{{match.id}}" class="match-card bg-dark d-flex flex-column  " data-game-id="{{match.id}}" data-victory-status="{{match.match_info.win}}">
+<div id="{{match.id}}" class="match-card d-flex flex-column result-{% if match.match_info.win == 'WIN'%}WIN{%else%}LOSE{%endif%}  " data-game-id="{{match.id}}" data-victory-status="{{match.match_info.win}}">
     <div class="match-content d-flex justify-content-between px-4" style="font-size: 12px; width: 100%; ">
         <div class="match-info text-center d-flex align-items-center">
             <div>
                 <div class="queue-type" style="font-weight: bold;">{{match.match_info.queue}}</div>
                 <div class="time-delta"> {{match.match_info.creation}}</div>
-                <div class="victory-status">{{match.match_info.win}} {{match.match_info.duration}} </div>
+                <div class="victory-status" style="font-weight: bold;">{{match.match_info.win}} {{match.match_info.duration}} </div>
             </div>
         </div>
         <div class="champion-info d-flex align-items-center justify-content-center">
@@ -17,19 +17,19 @@
                     <div>
                     {% for spell in match.summoner_info.spells%}
                         <div tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{spell.name}}">
-                            <img style="width: 20px; height: 20px;" src="{{spell.image}}" alt="{{spell.name}}">
+                            <img style="width: 20px; height: 20px;background-color: black; border-radius: 50%;" src="{{spell.image}}" alt="{{spell.name}}">
                         </div>
                     {%endfor%}
                     </div>
                     <div>
                     {% for tree in match.summoner_info.runes%}
                         <div tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{tree.name}}">
-                            <img style="width: 20px; height: 20px;" src="{{tree.image}}" alt="{{tree.name}}">
+                            <img style="width: 20px; height: 20px;background-color: black; border-radius: 50%;" src="{{tree.image}}" alt="{{tree.name}}">
                         </div>
                     {%endfor%}
                     </div>
                 </div>
-                <div class="runes" ></div>
+                
             </div>
         </div>
         <div class="player-stats d-flex flex-column text-center justify-content-center align-items-center my-1">
@@ -105,14 +105,14 @@
                             <th scope="col">Tier</th>
                             <th scope="col">KDA</th>
                             <th scope="col">Damage</th>
-                            <th scope="col">CS</th>
+                            <th scope="col" class="text-center">CS</th>
                             <th scope="col" class="text-center">Wards</th>
                             <th scope="col">Items</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for player, player_data in team.1.items%}
-                    <tr class="p-0 {%if player == 0.name%} isSummoner-match-details-container {% endif %} " >
+                    <tr class=" {%if player == 0.name%} isSummoner-match-details-container {% endif %} " >
                         <td>
                             <div class="d-flex align-item-center justify-content-center">
                                 <div class="d-flex  align-item-center justify-content-center {%if player == 0.name%} isSummoner-player-list {% endif %}" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{player_data.champion.name}}">
@@ -121,15 +121,15 @@
                                 <div class="d-flex">
                                     <div>
                                     {% for spell in player_data.spells%}
-                                        <div style="width: 15px; height: 15px; margin: 0;" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{spell.name}}">
-                                            <img  style="width: 15px; height: 15px; margin: 0;" src="{{spell.image}}" alt="{{spell.name}}">
+                                        <div style="width: 15px; height: 15px; margin: 0; background-color: black; border-radius: 50%;" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{spell.name}}">
+                                            <img  style="width: 15px; height: 15px; margin: 0; background-color: black; border-radius: 50%;" src="{{spell.image}}" alt="{{spell.name}}">
                                         </div>
                                     {%endfor%}
                                     </div>
                                     <div>
                                     {% for tree in player_data.runes%}
-                                        <div style="width: 15px; height: 15px; margin: 0;" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{tree.name}}">
-                                            <img style="width: 15px; height: 15px; margin: 0;" src="{{tree.image}}" alt="{{tree.name}}">
+                                        <div style="width: 15px; height: 15px; margin: 0; background-color: black; border-radius: 50%;" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{tree.name}}">
+                                            <img style="width: 15px; height: 15px; margin: 0; background-color: black; border-radius: 50%;" src="{{tree.image}}" alt="{{tree.name}}">
                                         </div>
                                     {%endfor%}
                                     </div>
@@ -145,7 +145,7 @@
                             <div class="KDA-ratio">{{player_data.kill_ratio}} KDA</div>
                         </td>
                         <td>{{player_data.damage}} </td>
-                        <td>
+                        <td class="text-center">
                             <div>{{player_data.cs}}</div>
                             <div >({{player_data.csm}})</div>
                         </td>
