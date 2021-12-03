@@ -51,10 +51,18 @@ function playerLinkLoad(player,region,id){
 }
 
 /// MATCH DETAILS
+let matchHistory = document.getElementById('match-history')
+
 function detailsExpand(id){
   match = document.getElementById(id)
   matchDetails = match.children[1]
-  matchDetails.hidden = !matchDetails.hidden
+  if (matchDetails){
+    // IF MATCH DETAILS ARE LOADED
+    matchDetails.hidden = !matchDetails.hidden
+    ajaxLoadMatchDetails(id)
+  }else{
+   
+  }
   btn = match.children[0].children[6]
   if (matchDetails.hidden){
     btn.children[0].children[0].classList = 'fas fa-angle-down'
@@ -63,7 +71,7 @@ function detailsExpand(id){
   }
 
 }
-let matchHistory = document.getElementById('match-history')
+
 
 var isLoading = false;
 let loadMatchesbtn = document.getElementById('loadMatches')
@@ -78,14 +86,14 @@ function loadMatchHistory(){
     puuid = player.getAttribute('data-puuid')
     continent = player.getAttribute('data-continent')
     start = matchHistory.children.length
-    ajaxHelper( puuid, continent, start)
+    ajaxLoadMatchs( puuid, continent, start)
     
   }
   
 }
 
 
-function ajaxHelper( puuid, continent, start){
+function ajaxLoadMatchs( puuid, continent, start){
   
   $.ajax({
     type: "GET",
@@ -109,6 +117,69 @@ function ajaxHelper( puuid, continent, start){
 	    dom.innerHTML = data;
       console.log(dom)
       matchHistory.append(dom)
+        
+    },
+    error: (error) => {
+      console.log(error);
+    },
+    complete: function () {
+        clearTimeout(timer); 
+        console.log('END')
+        isLoading = false;
+        loadMatchesbtn.classList.remove('disabled')  
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(
+          function (popoverTriggerEl) {
+            var options = {animation:false}
+              
+          return new bootstrap.Popover(popoverTriggerEl,options)
+        })
+    },
+  });
+}
+function detailsExpand(id){
+  match = document.getElementById(id)
+  matchDetails = match.children[1]
+  if (matchDetails){
+    // IF MATCH DETAILS ARE LOADED
+    matchDetails.hidden = !matchDetails.hidden
+    
+  }else{
+    //ajaxLoadMatchDetails(id,match)
+  }
+  btn = match.children[0].children[6]
+  if (matchDetails.hidden){
+    btn.children[0].children[0].classList = 'fas fa-angle-down'
+  }else{
+    btn.children[0].children[0].classList = 'fas fa-angle-up'
+  }
+
+}
+
+function ajaxLoadMatchDetails(id,match){
+  
+  $.ajax({
+    type: "GET",
+    
+    
+    data:{'details_expand': true, 'id':id},
+    dataType : 'html',
+    beforeSend: function () {
+        timer && clearTimeout(timer);
+        timer = setTimeout(function()
+        {
+            
+          //loader.hidden = false
+        },
+        300);
+        
+    },
+
+    success: (data) => {
+      console.log('loading match details',id)
+      var dom = document.createElement('div');
+	    dom.innerHTML = data;
+      match.append(dom) 
         
     },
     error: (error) => {

@@ -1,6 +1,6 @@
 from typing import Match
 from jg_diff.settings import CASSIOPEIA_RIOT_API_KEY
-from summoner.id_translation import *
+
 import json
 import arrow
 from django.urls import reverse
@@ -13,7 +13,9 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from django_cassiopeia import cassiopeia as cass
 
-DRAGON = 'https://raw.communitydragon.org/latest/plugins/'
+
+from summoner.id_translation import *
+from summoner.community_dd_resources import *
 
 # MATCH HISORY HELPERS
 
@@ -75,7 +77,7 @@ def get_participant_data(match, player):
         'name': player.summoner.name,
         'level': player.stats.level,
         'role': '',
-        'kills': player.stats.kills,
+        'iklls': player.stats.kills,
         'deaths': player.stats.deaths,
         'assists': player.stats.assists,
         'KDA': '{}/{}/{}'.format(player.stats.kills, player.stats.deaths, player.stats.assists),
@@ -101,6 +103,9 @@ def get_participant_data(match, player):
     return player_data
 
 
+def get_match_details():
+    ...
+
 def get_match(match_id, continent, name):
     match = cass.Match(id=match_id, continent=continent)
     match.load()
@@ -124,23 +129,31 @@ def get_match(match_id, continent, name):
     }
     summoner = None
     participants = {}
-    tier_acc = []
     max_damage = 0
+
     # THIS ENTIRE TEAM SECTION IS BAD, BUT Is It BETTER THAN HAVE DUPLICATE HTML? yes 
     for team in match.teams:
         players = {}
         
-        
         for player in team.participants:
             player_data = {}
-            player_data = get_participant_data(match,player)
+            
         
-            if player_data['damage_literal'] > max_damage:
-                max_damage= player_data['damage_literal'] 
-                        
+            
+            player_data = get_participant_data(match,player)       
             if player.summoner.name == name:
                 summoner = player
-                summoner_stats = player_data
+                
+                summoner_stats = player_data        
+            # else:
+            #     player_data = {
+            #         'name': player.summoner.name, 
+            #         'champion':{'name':player.champion.name, 'image':player.champion.image.url},
+            #         'damage':"{:,}".format(player.stats.total_damage_dealt_to_champions),
+            #         'damage_literal':int(player.stats.total_damage_dealt_to_champions),}
+            
+            if player_data['damage_literal'] > max_damage:
+                max_damage= player_data['damage_literal'] 
             players[player_data['name']] = player_data
                     
             
@@ -150,12 +163,6 @@ def get_match(match_id, continent, name):
                 [summoner_stats['teams'][0], participants[summoner_stats['teams'][0]]],
                 [summoner_stats['teams'][1], participants[summoner_stats['teams'][1]]]
             ]
-
-    teamObj = {
-        'name':'',
-        'victory-status': '',
-        'players':''
-    }
                 
     if summoner:
         if summoner.stats.win:
@@ -182,54 +189,14 @@ def get_match_history(name, puuid, continent,start):
     
     url_response = requests.get('https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}&api_key={}'
                                 .format(continent.lower(), puuid, start, 1, CASSIOPEIA_RIOT_API_KEY))
-    print(url_response)
     match_history = []
-   # print(json.loads(url_response.text))
     for match_id in json.loads(url_response.text):
-        
+        #platform, mid = match_id.split('_')[0], match_id.split('_')[1]
         match = get_match(match_id, cass.data.Continent(continent), name)
         match_history.append(match)
-        
-        
-    
-    
     return match_history
 
 
-def get_recent_info(match_history):
-    for match in match_history:
-
-        info = {
-            'history': match_history,
-            'games': len(match_history),
-            'wins': match_history,
-
-        }
-    return []
-
-
-# RESOURCES GETTERS
-def get_perstige_crest(level):
-    crest_id = border_icon_id(level)
-    icon = DRAGON+'rcp-be-lol-game-data/global/default/content/src/leagueclient/prestigeborders/theme-{}-solid-border.png'\
-        .format(crest_id)
-    return icon
-
-
-def get_rank_icon(tier):
-    ranked_id = ranked_icon_id(tier)
-    icon = DRAGON+'rcp-fe-lol-static-assets/global/default/images/ranked-mini-regalia/{}.png'\
-        .format(ranked_id)
-    return icon
-
-
-def get_rank_banner(tier):
-    ranks = 'unranked,iron,bronze,silver,gold,platinum,diamond,master,grandmaster,challenger'.split(
-        ',')
-    i = str(ranks.index(tier)).zfill(2)
-    icon = 'https://raw.communitydragon.org/latest/game/assets/loadouts/regalia/banners/{}_{}_banner.png'\
-        .format(i, tier)
-    return icon
 
 # LEAGUE ENTRY HELPER
 
@@ -276,7 +243,7 @@ def get_summoner_helper(request):
             # begin_index=0, end_index=21
             # check if it is ajax
             match_history = get_match_history(summoner.name, summoner.puuid, summoner.region.continent.value, 0)
-            match_info = get_recent_info(match_history)
+            # match_info = get_recent_info(match_history)
             #
             leagues = {'SOLO': {'rank': 'Unranked', 'icon': get_rank_icon('unranked'), 'banner': get_rank_banner('unranked')},
                        'FLEX': {'rank': 'Unranked', 'icon': get_rank_icon('unranked'), 'banner': get_rank_banner('unranked')}}
@@ -293,7 +260,6 @@ def get_summoner_helper(request):
                 'puuid': summoner.puuid,
                 'region':region,
                 'level': summoner.level,
-                'rank': summoner.ranks,
                 'match_history': match_history,
                 'leagues': leagues,
                 'profile_icon': summoner.profile_icon.url,
@@ -311,17 +277,25 @@ def get_summoner(request):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
     if is_ajax:
-        
-        
         name = request.GET.get('username',None)
         puuid = request.GET.get('puuid',None)
         continent = request.GET.get('continent',None)
         start = request.GET.get('start',None)
-        
         match_history = get_match_history(name, puuid, continent, int(start))
+
+        if (request.GET.get('details_expand',None)):
+            match = match_history[request.GET.get('id')]
+            details = get_match_details(match)
+            rendered = render_to_string('summoner/match_details.html', {'match': match})
+            return HttpResponse(rendered)
+        
         rendered = render_to_string('summoner/match_card.html', {0:{'match_history': match_history ,'name':name}})
+
         return HttpResponse(rendered)
 
+    if (request.GET.get('details_expand',None)):
+            rendered = render_to_string('summoner/match_details.html', {0:{'match_history': match_history ,'name':name}})
+            return HttpResponse(rendered)
     if request.GET['username'] == '':
         return render(request, 'summoner/player_page_empty.html')
 

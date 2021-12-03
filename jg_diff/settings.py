@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-y=3*zi_lxqz)s-8fh^dx!6rdd(s=_2b5_f^$(*x($%#v7khkj6'
-RIOT_API_KEY = 'RGAPI-4c2e47d9-ead3-4708-afd8-6a193df132b2'
+RIOT_API_KEY = 'RGAPI-f76bc90d-71c8-4a38-b867-1bc3683d569b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -53,7 +53,30 @@ CASSIOPEIA_LOGGING = {
     "DEFAULT": "WARNING",
     "CORE": "WARNING"
 }
-# do not keep api key public in production
+
+
+CACHES = {
+    'default': {  # Do not use it for ALIAS
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': '127.0.0.1:11211',
+    },
+    "cass-redis": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PICKLE_VERSION": -1,
+            "COMPRESSOR": "django_redis.compressors.lz4.Lz4Compressor",
+        }
+    },
+    'filebased': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'filebased-cache'),
+        'MAX_ENTRIES': 10000,
+    }
+}
+
+
 CASSIOPEIA_PIPELINE = {
     "Omnistone": {
         "EXPIRATIONS_MAP" : {
@@ -64,9 +87,30 @@ CASSIOPEIA_PIPELINE = {
         "MAX_ENTRIES": 6000,
         "CULL_FRECUENCY": 2,
         "SAFE_CHECK": True,
-        "LOGS_ENABLED": True,
+        "LOGS_ENABLED": False,
     },
-    
+    "DjangoCache": [
+            {
+                "ALIAS" : "cass-redis",
+                "EXPIRATIONS_MAP" : {
+                    td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"],
+                    td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
+                    td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
+                    0: ["*-"]
+                },
+                "SAFE_CHECK": True,
+                "LOGS_ENABLED": False,
+            },
+            {
+                "ALIAS": "filebased",
+                "EXPIRATIONS_MAP": {
+                    td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
+                    0: ["*-"]
+                },
+                "SAFE_CHECK": True,
+                "LOGS_ENABLED": True,
+            }
+    ],
     "DDragon": {},
     "RiotAPI": {},
 }

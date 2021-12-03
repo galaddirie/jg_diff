@@ -1,61 +1,37 @@
-from django.db import models
+# from django.db import models
 
-# Create your models here.
+# # Create your models here.
 
-# class SummonerAccount(models.Model):
-#     accountId	string
-#     profileIconId	int
-#     revisionDate	long
-#     summonerName	string
-#     summonerId	string	
-#     puuid	string	
-#     summonerLevel	long
+# class Participant(models.Model):
+#     ...
 
-
-# # make a field that connects PromotionInfo to something in SummonerRankedInfo
-# class SummonerRankedInfo(models.Model):
-#     leagueId	string	
-#     summonerId	string
-#     summonerName	string	
-#     queueType	string	
-#     tier	string	
-#     rank	string	
-#     leaguePoints	int	
-#     wins	int	Winning team on Summoners Rift.
-#     losses	int	Losing team on Summoners Rift.
-#     hotStreak	boolean
-
-# class PromotionInfo(models.Model):
-#     losses	int	
-#     progress	string	
-#     target	int	
-#     wins	int
-
-# # MAKE SOMETHING THAT POINTS MATCHLIST TO MATCH REFRENCE TO MATCH
-
-# class MatchList(models.Model):
-#     startIndex	int	
-#     totalGames	int	
-#     endIndex	int	
-#     matches	List[MatchReferenceDto]	
-
-# class MatchReference(models.Model):
-#     gameId	long	
-#     role	string	
-#     season	int	
-#     platformId	string	
-#     champion	int	
-#     queue	int	
-#     lane	string	
-#     timestamp	long
-
+# class MatchInfo:
+#     ...
 
 # class Match(models.Model):
-#      gameId = models.BigIntegerField()	
-#      role = models.CharField(max_length=32)	
-#      season = models.IntegerField()	
-#      platformId  = models.CharField(max_length=32)		
-#      champion = models.IntegerField()	
-#      queue	= models.IntegerField()	
-#      lane = models.CharField(max_length=32)		
-#      timestamp =	models.BigIntegerField()
+#     match_id: int
+#     summoner_info: Participant
+
+# class MatchHistory(models.Model):
+#     ...
+
+# class Rank(models.Model):
+#     rank: str
+#     icon: str
+
+# class League(models.Model):
+#     solo: Rank
+#     flex: Rank
+
+# class Summoner(models.Model):
+#     name:	str
+#     region:	str
+#     continent: str	
+#     puuid:	str	
+#     level: int
+#     profile_icon:	str
+#     border_icon: str
+#     leagues: League
+#     match_history: MatchHistory
+
+
