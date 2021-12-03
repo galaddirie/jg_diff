@@ -134,16 +134,11 @@ def get_match(match_id, continent, name):
     # THIS ENTIRE TEAM SECTION IS BAD, BUT Is It BETTER THAN HAVE DUPLICATE HTML? yes 
     for team in match.teams:
         players = {}
-        
         for player in team.participants:
             player_data = {}
-            
-        
-            
             player_data = get_participant_data(match,player)       
             if player.summoner.name == name:
                 summoner = player
-                
                 summoner_stats = player_data        
             # else:
             #     player_data = {
@@ -277,25 +272,25 @@ def get_summoner(request):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
     if is_ajax:
-        name = request.GET.get('username',None)
-        puuid = request.GET.get('puuid',None)
-        continent = request.GET.get('continent',None)
-        start = request.GET.get('start',None)
-        match_history = get_match_history(name, puuid, continent, int(start))
-
         if (request.GET.get('details_expand',None)):
-            match = match_history[request.GET.get('id')]
-            details = get_match_details(match)
-            rendered = render_to_string('summoner/match_details.html', {'match': match})
-            return HttpResponse(rendered)
-        
-        rendered = render_to_string('summoner/match_card.html', {0:{'match_history': match_history ,'name':name}})
+            print('EXPAND DETAILS')
+            name = request.GET.get('username',None)
+            match_id = request.GET.get('id',None)
+            continent = request.GET.get('continent',None)
+            details = get_match(match_id, continent, name)
+            rendered = render_to_string('summoner/match_details.html', {'match': {}})
+            
+        if (request.GET.get('start',None)):
+            name = request.GET.get('username',None)
+            puuid = request.GET.get('puuid',None)
+            continent = request.GET.get('continent',None)
+            start = request.GET.get('start',None)
+            match_history = get_match_history(name, puuid, continent, int(start))
+            rendered = render_to_string('summoner/match_card.html', {0:{'match_history': match_history ,'name':name}})
 
         return HttpResponse(rendered)
 
-    if (request.GET.get('details_expand',None)):
-            rendered = render_to_string('summoner/match_details.html', {0:{'match_history': match_history ,'name':name}})
-            return HttpResponse(rendered)
+    
     if request.GET['username'] == '':
         return render(request, 'summoner/player_page_empty.html')
 

@@ -51,36 +51,20 @@ function playerLinkLoad(player,region,id){
 }
 
 /// MATCH DETAILS
+let loader = document.getElementById('loader-container')
 let matchHistory = document.getElementById('match-history')
-
-function detailsExpand(id){
-  match = document.getElementById(id)
-  matchDetails = match.children[1]
-  if (matchDetails){
-    // IF MATCH DETAILS ARE LOADED
-    matchDetails.hidden = !matchDetails.hidden
-    ajaxLoadMatchDetails(id)
-  }else{
-   
-  }
-  btn = match.children[0].children[6]
-  if (matchDetails.hidden){
-    btn.children[0].children[0].classList = 'fas fa-angle-down'
-  }else{
-    btn.children[0].children[0].classList = 'fas fa-angle-up'
-  }
-
-}
 
 
 var isLoading = false;
 let loadMatchesbtn = document.getElementById('loadMatches')
+
+let player = document.getElementById('Player-Info')
 function loadMatchHistory(){
   
   if (!isLoading) {
     isLoading = true;
     loadMatchesbtn.classList.add('disabled')
-    player = document.getElementById('Player-Info')
+    
     //console.log(player)
     username = player.getAttribute('data-name')
     puuid = player.getAttribute('data-puuid')
@@ -137,59 +121,72 @@ function ajaxLoadMatchs( puuid, continent, start){
     },
   });
 }
+
 function detailsExpand(id){
   match = document.getElementById(id)
-  matchDetails = match.children[1]
-  if (matchDetails){
-    // IF MATCH DETAILS ARE LOADED
-    matchDetails.hidden = !matchDetails.hidden
+  matchDetails = match.children[2]
+  // IF MATCH DETAILS ARE LOADED
+  if(!isLoading){
     
-  }else{
-    //ajaxLoadMatchDetails(id,match)
+    if (matchDetails){
+      matchDetails.hidden = !matchDetails.hidden
+      btn = match.children[0].children[6]
+      if (matchDetails.hidden){
+        btn.children[0].children[0].classList = 'fas fa-angle-down'
+      }else{
+        btn.children[0].children[0].classList = 'fas fa-angle-up'
+      }
+      
+    }else{
+        console.log('LOADING')
+        isLoading= true
+        ajaxLoadMatchDetails(id,match)
+    }
+    
   }
-  btn = match.children[0].children[6]
-  if (matchDetails.hidden){
-    btn.children[0].children[0].classList = 'fas fa-angle-down'
-  }else{
-    btn.children[0].children[0].classList = 'fas fa-angle-up'
-  }
+  
 
 }
 
 function ajaxLoadMatchDetails(id,match){
-  
+  continent = player.getAttribute('data-continent')
+  var placeholder = document.createElement('div');
+  var loader = match.children[1]
   $.ajax({
     type: "GET",
-    
-    
-    data:{'details_expand': true, 'id':id},
+    data:{'details_expand': true, 'id':id, 'continent':continent},
     dataType : 'html',
     beforeSend: function () {
         timer && clearTimeout(timer);
         timer = setTimeout(function()
         {
-            
-          //loader.hidden = false
+          btn = match.children[0].children[6]
+          btn.children[0].children[0].classList = 'fas fa-angle-up disabled'
+          loader.hidden = false
         },
-        300);
+        10);
         
     },
-
     success: (data) => {
-      console.log('loading match details',id)
-      var dom = document.createElement('div');
-	    dom.innerHTML = data;
-      match.append(dom) 
+      //converting text to html
+      console.log('loaded match details from:',id)
+      
+	    placeholder.innerHTML = data;
+      placeholder.firstChild.hidden = false
+      
+      //adding details to match card
+      match.append(placeholder.firstChild) 
         
     },
     error: (error) => {
       console.log(error);
     },
     complete: function () {
-        clearTimeout(timer); 
+        clearTimeout(timer);
+        btn.children[0].children[0].classList.remove('disabled') 
         console.log('END')
+        loader.hidden = true
         isLoading = false;
-        loadMatchesbtn.classList.remove('disabled')  
         var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
         var popoverList = popoverTriggerList.map(
           function (popoverTriggerEl) {
