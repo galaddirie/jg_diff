@@ -2,14 +2,14 @@
     <div class="game-table-wrapper result-{% if match.match_info.win == 'WIN'%}WIN{%else%}LOSE{%endif%}"> 
         
         {% for team in match.teams%}
-        <div class="game-table mt-3">
+        <div class="game-table">
             <table class="align-middle" style="width: 100%;">
                 <thead>
                     <tr>
                         <th scope="col" style="width: 120px;">{{team.0 }} team </th>
                         <th scope="col">Tier</th>
                         <th scope="col">KDA</th>
-                        <th scope="col">Damage</th>
+                        <th scope="col" class="text-center">Damage</th>
                         <th scope="col" class="text-center">CS</th>
                         <th scope="col" class="text-center">Wards</th>
                         <th scope="col">Items</th>
@@ -45,11 +45,11 @@
                         </div>
                     </td>
                     <td style="width: 110px; padding: 4px;"><div>{{player_data.rank}}</div></td>
-                    <td style="width: 75px;">
+                    <td style="width: 65px;">
                         <div class="KDA" style="font-size: 12px;">{{player_data.KDA}}</div>
                         <div class="KDA-ratio">{{player_data.kill_ratio}} KDA</div>
                     </td>
-                    <td>{{player_data.damage}} </td>
+                    <td class="text-center">{{player_data.damage}} </td>
                     <td class="text-center">
                         <div>{{player_data.cs}}</div>
                         <div >({{player_data.csm}})</div>

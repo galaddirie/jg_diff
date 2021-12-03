@@ -89,28 +89,28 @@ CASSIOPEIA_PIPELINE = {
         "SAFE_CHECK": True,
         "LOGS_ENABLED": False,
     },
-    "DjangoCache": [
-            {
-                "ALIAS" : "cass-redis",
-                "EXPIRATIONS_MAP" : {
-                    td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"],
-                    td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
-                    td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
-                    0: ["*-"]
-                },
-                "SAFE_CHECK": True,
-                "LOGS_ENABLED": False,
-            },
-            {
-                "ALIAS": "filebased",
-                "EXPIRATIONS_MAP": {
-                    td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
-                    0: ["*-"]
-                },
-                "SAFE_CHECK": True,
-                "LOGS_ENABLED": True,
-            }
-    ],
+    # "DjangoCache": [
+    #         {
+    #             "ALIAS" : "cass-redis",
+    #             "EXPIRATIONS_MAP" : {
+    #                 td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-"],
+    #                 td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
+    #                 td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
+    #                 0: ["*-"]
+    #             },
+    #             "SAFE_CHECK": True,
+    #             "LOGS_ENABLED": False,
+    #         },
+    #         {
+    #             "ALIAS": "filebased",
+    #             "EXPIRATIONS_MAP": {
+    #                 td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
+    #                 0: ["*-"]
+    #             },
+    #             "SAFE_CHECK": True,
+    #             "LOGS_ENABLED": True,
+    #         }
+    # ],
     "DDragon": {},
     "RiotAPI": {},
 }
