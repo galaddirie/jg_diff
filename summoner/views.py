@@ -106,7 +106,7 @@ def get_participant_data(match, player):
 def get_match_details():
     ...
 
-def get_match(match_id, continent, name):
+def get_match(match_id, continent, name, is_ajax=False):
     match = cass.Match(id=match_id, continent=continent)
     match.load()
     try:
@@ -136,21 +136,26 @@ def get_match(match_id, continent, name):
         players = {}
         for player in team.participants:
             player_data = {}
-            player_data = get_participant_data(match,player)       
+            
             if player.summoner.name == name:
+                player_data = get_participant_data(match,player)       
                 summoner = player
                 summoner_stats = player_data        
-            # else:
-            #     player_data = {
-            #         'name': player.summoner.name, 
-            #         'champion':{'name':player.champion.name, 'image':player.champion.image.url},
-            #         'damage':"{:,}".format(player.stats.total_damage_dealt_to_champions),
-            #         'damage_literal':int(player.stats.total_damage_dealt_to_champions),}
-            
-            if player_data['damage_literal'] > max_damage:
-                max_damage= player_data['damage_literal'] 
-            players[player_data['name']] = player_data
-                    
+            else:
+                if not is_ajax:
+
+                    player_data = {
+                        'name': player.summoner.name, 
+                        'champion':{'name':player.champion.name, 'image':player.champion.image.url},
+                    }
+                else:
+                    player_data = get_participant_data(match,player)
+            try:
+                if player_data['damage_literal'] > max_damage:
+                    max_damage= player_data['damage_literal']  
+            except:
+                ...
+            players[player_data['name']] = player_data        
             
         participants[team.side.name] = players
 
@@ -184,6 +189,8 @@ def get_match_history(name, puuid, continent,start):
     
     url_response = requests.get('https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}&api_key={}'
                                 .format(continent.lower(), puuid, start, 1, CASSIOPEIA_RIOT_API_KEY))
+    print('Making call:', 'https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}'
+                                .format(continent.lower(), puuid, start, 1))
     match_history = []
     for match_id in json.loads(url_response.text):
         #platform, mid = match_id.split('_')[0], match_id.split('_')[1]
@@ -277,8 +284,8 @@ def get_summoner(request):
             name = request.GET.get('username',None)
             match_id = request.GET.get('id',None)
             continent = request.GET.get('continent',None)
-            details = get_match(match_id, continent, name)
-            rendered = render_to_string('summoner/match_details.html', {'match': {}})
+            details = get_match(match_id, continent, name, is_ajax)
+            rendered = render_to_string('summoner/match_details.html', {'match': details})
             
         if (request.GET.get('start',None)):
             name = request.GET.get('username',None)
