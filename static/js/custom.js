@@ -21,7 +21,8 @@ let loginPopover = (
     }
     var popover = new bootstrap.Popover(popoverBTN, popoverOptions)
     return popover
-  })()
+  }
+)()
 
 
 
@@ -50,15 +51,17 @@ function playerLinkLoad(player,region,id){
   el.href = url
 }
 
-/// MATCH DETAILS
+
+// MATCH VARIABLES
 let loader = document.getElementById('loader-container')
 let matchHistory = document.getElementById('match-history')
-
-
 var isLoading = false;
 let loadMatchesbtn = document.getElementById('loadMatches')
 
 let player = document.getElementById('Player-Info')
+
+// MATCH HISTORY 
+
 function loadMatchHistory(){
   
   if (!isLoading) {
@@ -75,7 +78,6 @@ function loadMatchHistory(){
   }
   
 }
-
 
 function ajaxLoadMatchs( puuid, continent, start){
   
@@ -97,10 +99,16 @@ function ajaxLoadMatchs( puuid, continent, start){
     },
 
     success: (data) => {
-      var dom = document.createElement('div');
-	    dom.innerHTML = data;
-      console.log(dom)
-      matchHistory.append(dom)
+      var placeholder = document.createElement('div');
+	    placeholder.innerHTML = data;
+      var popoverTriggerList = [].slice.call(placeholder.querySelectorAll('[data-bs-toggle="popover"]'))
+      var popoverList = popoverTriggerList.map(
+        function (popoverTriggerEl) {
+          var options = {animation:false}
+            
+        return new bootstrap.Popover(popoverTriggerEl,options)
+      })
+      matchHistory.append(placeholder)
         
     },
     error: (error) => {
@@ -111,17 +119,12 @@ function ajaxLoadMatchs( puuid, continent, start){
         console.log('END')
         isLoading = false;
         loadMatchesbtn.classList.remove('disabled')  
-        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-        var popoverList = popoverTriggerList.map(
-          function (popoverTriggerEl) {
-            var options = {animation:false}
-              
-          return new bootstrap.Popover(popoverTriggerEl,options)
-        })
+        
     },
   });
 }
 
+// MATCH DETAILS
 function detailsExpand(id){
   match = document.getElementById(id)
   matchDetails = match.children[2]
@@ -173,10 +176,18 @@ function ajaxLoadMatchDetails(id,match){
       
 	    placeholder.innerHTML = data;
       placeholder.firstChild.hidden = false
-      
+      //initlize popover
+      var popoverTriggerList = [].slice.call(placeholder.firstChild.querySelectorAll('[data-bs-toggle="popover"]'))
+      var popoverList = popoverTriggerList.map(
+        function (popoverTriggerEl) {
+          var options = {animation:false}
+            
+        return new bootstrap.Popover(popoverTriggerEl,options)
+      })
       //adding details to match card
       match.append(placeholder.firstChild) 
-        
+      
+      
     },
     error: (error) => {
       console.log(error);
@@ -187,13 +198,7 @@ function ajaxLoadMatchDetails(id,match){
         console.log('END')
         loader.hidden = true
         isLoading = false;
-        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-        var popoverList = popoverTriggerList.map(
-          function (popoverTriggerEl) {
-            var options = {animation:false}
-              
-          return new bootstrap.Popover(popoverTriggerEl,options)
-        })
+        
     },
   });
 }

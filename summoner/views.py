@@ -20,7 +20,7 @@ from summoner.community_dd_resources import *
 # MATCH HISORY HELPERS
 
 
-def get_participant_data(match, player):
+def get_participant_data(match, player, is_ajax=False):
     """
     Helper for get_match()
     """
@@ -58,10 +58,11 @@ def get_participant_data(match, player):
     
     solo_rank = 'Unranked'
     try:
-        for league in player.summoner.league_entries:
-        
-            if league.queue.name == 'ranked_solo_fives':
-                solo_rank =league.tier.value.capitalize()+' '+league.division.value
+        if False:
+            for league in player.summoner.league_entries:
+            
+                if league.queue.name == 'ranked_solo_fives':
+                    solo_rank =league.tier.value.capitalize()+' '+league.division.value
     except:
         ...
 
@@ -103,12 +104,9 @@ def get_participant_data(match, player):
     return player_data
 
 
-def get_match_details():
-    ...
-
 def get_match(match_id, continent, name, is_ajax=False):
     match = cass.Match(id=match_id, continent=continent)
-    match.load()
+    #match.load()
     try:
         is_remake = match.is_remake
     except:
@@ -138,7 +136,7 @@ def get_match(match_id, continent, name, is_ajax=False):
             player_data = {}
             
             if player.summoner.name == name:
-                player_data = get_participant_data(match,player)       
+                player_data = get_participant_data(match,player,is_ajax)       
                 summoner = player
                 summoner_stats = player_data        
             else:
@@ -149,7 +147,7 @@ def get_match(match_id, continent, name, is_ajax=False):
                         'champion':{'name':player.champion.name, 'image':player.champion.image.url},
                     }
                 else:
-                    player_data = get_participant_data(match,player)
+                    player_data = get_participant_data(match,player,is_ajax)
             try:
                 if player_data['damage_literal'] > max_damage:
                     max_damage= player_data['damage_literal']  
@@ -193,7 +191,7 @@ def get_match_history(name, puuid, continent,start):
                                 .format(continent.lower(), puuid, start, 1))
     match_history = []
     for match_id in json.loads(url_response.text):
-        #platform, mid = match_id.split('_')[0], match_id.split('_')[1]
+        platform, mid = match_id.split('_')[0], match_id.split('_')[1]
         match = get_match(match_id, cass.data.Continent(continent), name)
         match_history.append(match)
     return match_history
@@ -277,18 +275,18 @@ def get_summoner_helper(request):
 
 def get_summoner(request):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-
+    name = request.GET.get('username',None)
+    region = request.GET.get('region',None)
     if is_ajax:
         if (request.GET.get('details_expand',None)):
             print('EXPAND DETAILS')
-            name = request.GET.get('username',None)
+            
             match_id = request.GET.get('id',None)
             continent = request.GET.get('continent',None)
             details = get_match(match_id, continent, name, is_ajax)
-            rendered = render_to_string('summoner/match_details.html', {'match': details})
+            rendered = render_to_string('summoner/match_details.html', {'match': details, 'region':region,'name':name})
             
         if (request.GET.get('start',None)):
-            name = request.GET.get('username',None)
             puuid = request.GET.get('puuid',None)
             continent = request.GET.get('continent',None)
             start = request.GET.get('start',None)
