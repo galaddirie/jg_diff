@@ -1,4 +1,6 @@
 from typing import Match
+
+from requests.api import request
 from jg_diff.settings import CASSIOPEIA_RIOT_API_KEY
 
 import json
@@ -185,21 +187,20 @@ def get_match(match_id, continent, name, is_ajax=False):
 
 def get_match_history(name, puuid, continent,start):
     
-    url_response = requests.get('https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}&api_key={}'
-                                .format(continent.lower(), puuid, start, 1, CASSIOPEIA_RIOT_API_KEY))
-    print('Making call:', 'https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}'
-                                .format(continent.lower(), puuid, start, 1))
+    url = 'https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}'\
+        .format(continent.lower(), puuid, start, 1)
+    headers = { "X-Riot-Token": CASSIOPEIA_RIOT_API_KEY}
+
+    r = requests.get(url, headers=headers)
+    print('Making call:', url)
     match_history = []
-    for match_id in json.loads(url_response.text):
-        platform, mid = match_id.split('_')[0], match_id.split('_')[1]
+    for match_id in json.loads(r.text):
         match = get_match(match_id, cass.data.Continent(continent), name)
         match_history.append(match)
     return match_history
 
 
-
 # LEAGUE ENTRY HELPER
-
 
 def get_league_entry(league):
     icon = get_rank_icon(league.tier.name)

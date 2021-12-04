@@ -50,19 +50,19 @@
                                     <div class="me-3 text-left" style="min-width: 130px;">
                                         <div class="rank-name">{{league}}Q</div>
                                         <div class="text-left" style="font-size: 1em;">
-                                            <span class="rank-value">{{ entries.rank }} </span>
-                                            {% if entries.lp %}
-                                            <span style="font-size: .9em;">{{ entries.lp }}</span><span style="font-size: .7em;">LP</span>
+                                            <span class="rank-value">{{entries.rank}} </span>
+                                            {% if entries.lp is not None %}
+                                            <span style="font-size: .9em;">{{entries.lp}}</span><span style="font-size: .7em;">LP</span>
                                             {% endif %}
                                         </div>
                                         <div class="text-left" style="font-size: 15px;">
-                                            {% if entries.lp %} 
+                                            {% if entries.lp is not None %} 
                                             {{ entries.wins }}<span style="font-size: .7em;">W</span> 
                                             {{ entries.losses }}<span style="font-size: .7em;">L</span> 
                                             {% endif %}
                                         </div>
                                         <div class="text-left" style="font-size: 15px;">
-                                            {% if entries.lp %} 
+                                            {% if entries.lp is not None %} 
                                             {% if entries.promos.played %}
                                                 Series:
                                                 {% for win in entries.promos.played %}
@@ -84,8 +84,9 @@
                                         </div>
                                         
                                     </div>
+                                    
                                 {% endfor %}
-
+                                
                             </div>
                             
                             <div class="info-right  mx-4  col-6 container d-flex" style="padding-left: 60px;" >
