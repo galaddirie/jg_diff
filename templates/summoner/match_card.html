@@ -49,26 +49,24 @@
                     <div class="tier-division">Vision: {{match.summoner_info.vision_score}}</div>
                 </div>
         </div>
-        <div class="items d-flex align-items-center">
+        <div class="items d-flex align-items-center justify-content-between">
             <div class="item-container row" >
                 {% for item in match.summoner_info.items%}
-                    {% if item %}                                                
-                        <div data-id={{item.id}} class="item" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{item.name}}" data-bs-content="{{item.desc}}"><img  src="{{item.image}}" alt="{{item.name}}"></div>
-                        
-                        <!-- <div id="{{item.id}}" style="display: none">
-                            {{item.desc}}
-                        </div> -->
-                    {%else%}
-                        <div class="item bg-secondary"></div>
-                    {%endif%}
+                    {% include "summoner/item_list.html" %}
                 
                 {% endfor %}
                 
             </div>
-            <div data-id={{match.summoner_info.trinket.id}} class="item" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{match.summoner_info.trinket.name}}" style="margin-left: 10px;"><img  src="{{match.summoner_info.trinket.image}}" alt="{{match.summoner_info.trinket.name}}"></div>
-            <div id="{{match.summoner_info.trinket.id}}" style="display: none">
-                {{match.summoner_info.trinket.desc}}
-            </div>
+            
+            {% if match.summoner_info.trinket%} 
+                <div data-id={{match.summoner_info.trinket.id}} class="item" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{match.summoner_info.trinket.name}}" style="margin:0px;">
+                    <img  src="{{match.summoner_info.trinket.image}}" alt="{{match.summoner_info.trinket.name}}">
+                </div>
+            {%else%}
+                <div class="item bg-secondary"></div>
+            {%endif%} 
+                 
+            
         </div>
         <div class="participants d-flex align-items-center">
             {% for team_side, team in match.participants.items%}

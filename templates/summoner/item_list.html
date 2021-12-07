@@ -1,0 +1,13 @@
+{% if item is not None%}                                                
+    <div data-id={{item.id}} class="item" style="margin: 2px;" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-title="{{item.name}}">
+        <img  src="{{item.image}}" alt="{{item.name}}">
+        <div hidden>
+            {{item.desc|safe }}
+            {%if item.cost.total%}
+            Cost: {{item.cost.total}}({{item.cost.base}})
+            {%endif%}
+        </div>
+    </div>
+{%else%}
+    <div style="margin: 2px;" class="item bg-secondary"></div>
+{%endif%}

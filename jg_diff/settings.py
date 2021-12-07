@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-y=3*zi_lxqz)s-8fh^dx!6rdd(s=_2b5_f^$(*x($%#v7khkj6'
-RIOT_API_KEY = 'RGAPI-7274b2b0-b927-46b6-b210-7e78f5270548'
+RIOT_API_KEY = 'RGAPI-bcf5ec88-46c5-4351-9535-5641349e6878'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -99,7 +99,7 @@ CASSIOPEIA_PIPELINE = {
                     0: ["*-"]
                 },
                 "SAFE_CHECK": True,
-                "LOGS_ENABLED": True,
+                "LOGS_ENABLED": False,
             },
             {
                 "ALIAS": "filebased",

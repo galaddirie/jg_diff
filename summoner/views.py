@@ -1,17 +1,10 @@
-from typing import Match
-
-from requests.api import request
 from jg_diff.settings import CASSIOPEIA_RIOT_API_KEY
 
 import json
 import arrow
-from django.urls import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, response
 from django.template.loader import render_to_string
-from django.http import HttpResponseRedirect
-from django.core.paginator import Paginator
-from django.views.decorators.csrf import ensure_csrf_cookie
 import requests
 from django_cassiopeia import cassiopeia as cass
 
@@ -22,27 +15,24 @@ from summoner.community_dd_resources import *
 # MATCH HISORY HELPERS
 
 
-def get_participant_data(match, player, is_ajax=False):
+def get_participant_data(match, player, details_expanded=False):
     """
     Helper for get_match()
     """
     player_data = {}
-    
+
     items =[]
     for item in player.stats.items:
-        trinket ={'name':'', 'image': ''}
-        try: 
-            
-            items.append({'name': item.name,'image':item.image.url,'desc': sanitize_desc(item.description), 'id':item.id}) # 'desc': item.description,
-    
+        try:
+            items.append({'name': item.name,'image':item.image.url,'desc': item.description, 'id':item.id, 'cost':item.gold}) # 'desc': item.description,
         except:
-            ...
+            items.append(None)
     trinket = items.pop(-1)
-    items += [None]*(6-len(items))
 
     cs = player.stats.total_minions_killed + player.stats.neutral_minions_killed    
     seconds = match.duration.total_seconds()    
     cs_per_minute = round(cs/((seconds % 3600) // 60),1)
+
 
     keystone = ''
     runes = []
@@ -57,21 +47,26 @@ def get_participant_data(match, player, is_ajax=False):
                   {'image': secondary_tree.image_url, 'name': secondary_tree.name}]
     except:
         ...
-    
-    solo_rank = 'Unranked'
-    try:
-        if False:
-            for league in player.summoner.league_entries:
-            
-                if league.queue.name == 'ranked_solo_fives':
-                    solo_rank =league.tier.value.capitalize()+' '+league.division.value
-    except:
-        ...
-
     spells = []
     try:
         spells = [{'name':player.summoner_spell_d.name,'image':player.summoner_spell_d.image.url}, 
         {'name':player.summoner_spell_f.name,'image':player.summoner_spell_f.image.url}]
+    except:
+        ...
+
+    solo_rank = ' '
+    try:    
+        if False:
+            solo_rank = 'Level ' + str(player.summoner.level)
+            player_entries = player.summoner.league_entries
+            for league in player_entries:
+                print(league)
+                if match.queue.name == 'ranked_solo_fives' or match.queue.name == 'ranked_flex_fives':
+                    if league.queue.name == match.queue.name:
+                        solo_rank =league.tier.value.capitalize()+' '+league.division.value
+                else:
+                    if player_entries.fives.tier.value.lower() != 'unranked':
+                         solo_rank =player_entries.fives.tier.value.capitalize()+' '+player_entries.fives.division.value               
     except:
         ...
 
@@ -106,9 +101,11 @@ def get_participant_data(match, player, is_ajax=False):
     return player_data
 
 
-def get_match(match_id, continent, name, is_ajax=False):
+def get_match(match_id, continent, name, details_expanded=False):
     match = cass.Match(id=match_id, continent=continent)
-    #match.load()
+    
+    match.load()
+    
     try:
         is_remake = match.is_remake
     except:
@@ -136,20 +133,19 @@ def get_match(match_id, continent, name, is_ajax=False):
         players = {}
         for player in team.participants:
             player_data = {}
-            
-            if player.summoner.name == name:
-                player_data = get_participant_data(match,player,is_ajax)       
+            if player.summoner.sanitized_name == name:
+                player_data = get_participant_data(match,player,details_expanded)       
                 summoner = player
                 summoner_stats = player_data        
             else:
-                if not is_ajax:
+                if not details_expanded:
 
                     player_data = {
                         'name': player.summoner.name, 
                         'champion':{'name':player.champion.name, 'image':player.champion.image.url},
                     }
                 else:
-                    player_data = get_participant_data(match,player,is_ajax)
+                    player_data = get_participant_data(match,player,details_expanded)
             try:
                 if player_data['damage_literal'] > max_damage:
                     max_damage= player_data['damage_literal']  
@@ -192,13 +188,13 @@ def get_match_history(name, puuid, continent,start):
     headers = { "X-Riot-Token": CASSIOPEIA_RIOT_API_KEY}
 
     r = requests.get(url, headers=headers)
-    print('Making call:', url)
+    print('GETTING MATCH HISTORY FROM API', r.text)
     match_history = []
     for match_id in json.loads(r.text):
+        print(match_id)
         match = get_match(match_id, cass.data.Continent(continent), name)
         match_history.append(match)
     return match_history
-
 
 # LEAGUE ENTRY HELPER
 
@@ -226,9 +222,7 @@ def get_league_entry(league):
 
 
 def get_summoner_helper(request):
-
     summoner_data = {}
-
     region = request.GET['region']
     name = request.GET['username']
     # removes all whitespace from names ex. hello world is the same name as helloworld
@@ -238,23 +232,27 @@ def get_summoner_helper(request):
     name_check = []
     i = 0
     for player in names:
-        summoner = cass.Summoner(name=player, region=region)
+        summoner = cass.get_summoner(name=player, region=region)
         if summoner.exists:
-            # begin_time=cass.Patch.latest(region="NA").start
-            # begin_index=0, end_index=21
-            # check if it is ajax
-            match_history = get_match_history(summoner.name, summoner.puuid, summoner.region.continent.value, 0)
-            # match_info = get_recent_info(match_history)
-            #
+            # TODO do not make a api request for match history here, rather load match history after page is loaded
+            # maybe we check the cache for a match list here and if none is in cache, we make the request, 
+            # unless we hit update where we then make a new api request and add it to the cache
+            match_history = {} #get_match_history(summoner.sanitized_name, summoner.puuid, summoner.region.continent.value, 0)
             leagues = {'SOLO': {'rank': 'Unranked', 'icon': get_rank_icon('unranked'), 'banner': get_rank_banner('unranked')},
                        'FLEX': {'rank': 'Unranked', 'icon': get_rank_icon('unranked'), 'banner': get_rank_banner('unranked')}}
             k = 0
-            for league in summoner.league_entries:
-
-                if league.queue.name == 'ranked_solo_fives':
-                    leagues['SOLO'] = get_league_entry(league)
-                if league.queue.name == 'ranked_flex_fives':
-                    leagues['FLEX'] = get_league_entry(league)
+            
+            league_entries = summoner.league_entries
+            for entry in league_entries:
+                try:
+                    entry.queue
+                except:
+                    continue
+                if entry.queue.name == 'ranked_solo_fives':
+                    leagues['SOLO'] = get_league_entry(entry)
+                if entry.queue.name == 'ranked_flex_fives':
+                    leagues['FLEX'] = get_league_entry(entry)
+            
             data = {
                 'continent':summoner.region.continent.value,
                 'name': summoner.name,
@@ -278,25 +276,24 @@ def get_summoner(request):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     name = request.GET.get('username',None)
     region = request.GET.get('region',None)
+    santized_name = ''.join(name.lower().split())
+    
     if is_ajax:
         if (request.GET.get('details_expand',None)):
-            print('EXPAND DETAILS')
-            
             match_id = request.GET.get('id',None)
             continent = request.GET.get('continent',None)
-            details = get_match(match_id, continent, name, is_ajax)
+            details = get_match(match_id, continent, santized_name, request.GET.get('details_expand',None))
             rendered = render_to_string('summoner/match_details.html', {'match': details, 'region':region,'name':name})
             
         if (request.GET.get('start',None)):
             puuid = request.GET.get('puuid',None)
             continent = request.GET.get('continent',None)
             start = request.GET.get('start',None)
-            match_history = get_match_history(name, puuid, continent, int(start))
-            rendered = render_to_string('summoner/match_card.html', {0:{'match_history': match_history ,'name':name}})
+            match_history = get_match_history(santized_name, puuid, continent, int(start))
+            rendered = render_to_string('summoner/match_card.html', {0:{'match_history': match_history ,'name':name, 'region':region}})
 
         return HttpResponse(rendered)
-
-    
+ 
     if request.GET['username'] == '':
         return render(request, 'summoner/player_page_empty.html')
 
