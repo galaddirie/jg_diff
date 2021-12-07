@@ -1,12 +1,14 @@
 {% if item is not None%}                                                
-    <div data-id={{item.id}} class="item" style="margin: 2px;" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-title="{{item.name}}">
+    <div data-id={{item.id}} class="item" style="margin: 2px;" tabindex="0"  data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-title="{{item.name}}">
+        {% comment %} data-bs-template="<div class='popover' role='tooltip'><h3 class='popover-header poover-custom-header'></h3><div class='popover-body poover-custom-body'></div></div>" {% endcomment %}
         <img  src="{{item.image}}" alt="{{item.name}}">
         <div hidden>
             {{item.desc|safe }}
             {%if item.cost.total%}
-            Cost: {{item.cost.total}}({{item.cost.base}})
+            Cost:<goldCost> {{item.cost.total}}({{item.cost.base}})</goldCost>
             {%endif%}
         </div>
+        
     </div>
 {%else%}
     <div style="margin: 2px;" class="item bg-secondary"></div>

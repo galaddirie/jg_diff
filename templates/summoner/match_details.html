@@ -6,7 +6,7 @@
                 <thead>
                     <tr>
                         <th scope="col" style="width: 127px;">{{team.0 }} team </th>
-                        <th scope="col">Tier</th>
+                        <th scope="col" style="width: 80px; padding: 4px; margin-left: 5px;">Level</th>
                         <th scope="col">KDA</th>
                         <th scope="col" class="text-center">Damage</th>
                         <th scope="col" class="text-center">CS</th>
@@ -43,7 +43,10 @@
                             </div>
                         </div>
                     </td>
-                    <td style="width: 110px; padding: 4px;"><div>{{player_data.rank}}</div></td>
+                    <td style="width: 80px; padding: 4px; margin-left: 5px;">
+                        <!-- <div>{{player_data.rank}} GRANDMASTER </div> -->
+                        <div>Level: {{player_data.level}}</div>
+                    </td>
                     <td style="width: 65px;">
                         <div class="KDA" style="font-size: 12px;">{{player_data.KDA}}</div>
                         <div class="KDA-ratio">{{player_data.kill_ratio}} KDA</div>
@@ -72,22 +75,27 @@
                     </td>
                     <td style="width: 175px;">
                         <div class="d-flex align-items-center " >
-                            <div class="d-flex" >
-                                {% for item in player_data.items%}
-                                    {% include "summoner/item_list.html" %}
+                            <div>
+                                <div class="d-flex" >
+                                    {% for item in player_data.items%}
+                                        {% include "summoner/item_list.html" %}
+                                    
+                                    {% endfor %}
                                 
-                                {% endfor %}
-                            
+                                </div>
+                                
                             </div>
                             {% if player_data.trinket %} 
                                 <div data-id={{player_data.trinket.id}} class="item" style="margin: 2px;"  tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{player_data.trinket.name}}" style="margin-left: 10px;">
                                 <img  src="{{player_data.trinket.image}}" alt="{{player_data.trinket.name}}">
+                                </div>
                             {%else%}
                                 <div class="item bg-secondary"></div>
                             {%endif%} 
-                        </div>
+                        
                         </div>
                     </td>
+                    
                 </tr>
                 {% endfor %}
                 </tbody>           

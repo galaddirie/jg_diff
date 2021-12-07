@@ -326,6 +326,8 @@ background-color: var(--darkyellow);
 
 }
 
+
+
 /*player valid page*/
 
 .league-icon img{
@@ -631,8 +633,7 @@ color: var(--primary);
 }
 /*item list*/
 .items{
-  
-  width: 90px;
+  width: fit-content;
 }
 
 .item-container{
@@ -648,6 +649,16 @@ color: var(--primary);
   width: 20px;
   height: 20px;
   border-radius: 5px;
+}
+
+/*popover ITEMS*/
+.popover mainText li{
+  list-style: none;
+}
+
+.popover goldCost{
+  color: #cc8b00;
+  font-weight: bold;
 }
 
 /*participants / player list*/
@@ -773,6 +784,10 @@ color: var(--primary);
     margin-top: 0;
   }
 }
+
+
+
+
 
 /*FOOTER*/
 footer{

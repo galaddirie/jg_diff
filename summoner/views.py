@@ -14,6 +14,53 @@ from summoner.community_dd_resources import *
 
 # MATCH HISORY HELPERS
 
+def player_score(player):
+    roleScaler={
+        'turret_damage':{
+            'top':0,
+            'jungle':0,
+            'mid':0,
+            'adc':0,
+            'support':0,
+        },
+        'objective_damage':{
+            'top':0,
+            'jungle':0,
+            'mid':0,
+            'adc':0,
+            'support':0,
+        },
+        'kills':{
+            'top':0,
+            'jungle':0,
+            'mid':0,
+            'adc':0,
+            'support':0,
+        },
+        'deaths':{
+            'top':0,
+            'jungle':0,
+            'mid':0,
+            'adc':0,
+            'support':0,
+        },
+        'assists':{
+            'top':0,
+            'jungle':0,
+            'mid':0,
+            'adc':0,
+            'support':0,
+        },
+        'kill_participation':{
+            'top':0,
+            'jungle':0,
+            'mid':0,
+            'adc':0,
+            'support':0,
+        },
+        
+    }
+    ### total damage to turrets*roleScaler+total damage 
 
 def get_participant_data(match, player, details_expanded=False):
     """
@@ -74,6 +121,7 @@ def get_participant_data(match, player, details_expanded=False):
         'id':player.summoner.id,
         'name': player.summoner.name,
         'level': player.stats.level,
+        
         'role': '',
         'iklls': player.stats.kills,
         'deaths': player.stats.deaths,
@@ -184,14 +232,13 @@ def get_match(match_id, continent, name, details_expanded=False):
 def get_match_history(name, puuid, continent,start):
     
     url = 'https://{}.api.riotgames.com/lol/match/v5/matches/by-puuid/{}/ids?&start={}&count={}'\
-        .format(continent.lower(), puuid, start, 1)
+        .format(continent.lower(), puuid, start, 10)
     headers = { "X-Riot-Token": CASSIOPEIA_RIOT_API_KEY}
 
     r = requests.get(url, headers=headers)
     print('GETTING MATCH HISTORY FROM API', r.text)
     match_history = []
     for match_id in json.loads(r.text):
-        print(match_id)
         match = get_match(match_id, cass.data.Continent(continent), name)
         match_history.append(match)
     return match_history
@@ -286,10 +333,12 @@ def get_summoner(request):
             rendered = render_to_string('summoner/match_details.html', {'match': details, 'region':region,'name':name})
             
         if (request.GET.get('start',None)):
+            print('getting matches')
             puuid = request.GET.get('puuid',None)
             continent = request.GET.get('continent',None)
             start = request.GET.get('start',None)
             match_history = get_match_history(santized_name, puuid, continent, int(start))
+            
             rendered = render_to_string('summoner/match_card.html', {0:{'match_history': match_history ,'name':name, 'region':region}})
 
         return HttpResponse(rendered)

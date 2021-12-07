@@ -49,15 +49,17 @@
                     <div class="tier-division">Vision: {{match.summoner_info.vision_score}}</div>
                 </div>
         </div>
-        <div class="items d-flex align-items-center justify-content-between">
-            <div class="item-container row" >
+        <div class="items d-flex align-items-center">
+            <div class="item-container row ms-3" >
                 {% for item in match.summoner_info.items%}
                     {% include "summoner/item_list.html" %}
-                
                 {% endfor %}
                 
             </div>
             
+            
+        </div>
+        <div class="trinket d-flex align-items-center">
             {% if match.summoner_info.trinket%} 
                 <div data-id={{match.summoner_info.trinket.id}} class="item" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{match.summoner_info.trinket.name}}" style="margin:0px;">
                     <img  src="{{match.summoner_info.trinket.image}}" alt="{{match.summoner_info.trinket.name}}">
@@ -65,8 +67,6 @@
             {%else%}
                 <div class="item bg-secondary"></div>
             {%endif%} 
-                 
-            
         </div>
         <div class="participants d-flex align-items-center">
             {% for team_side, team in match.participants.items%}
@@ -87,7 +87,6 @@
             {%endfor%}
         </div>
         <div class="match-details-btn d-flex justify-content-center align-items-center" > 
-            
                 <button class="btn text-light" onclick="detailsExpand('{{match.id}}')"><i class="fas fa-angle-down" style="font-size: 2em;"></i></button>  
         </div>
     </div>

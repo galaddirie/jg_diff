@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div class="container top top-buffer text-light">
+<div class="container top top-buffer text-light" >
     
     <!-- <h1>{{ api_request }}</h1> -->
     <main>
@@ -109,7 +109,7 @@
                 </div>
             </div>
         </section>
-
+        
 
         <section id="Game-Info">
             <div class="container-fluid" style="z-index: -1; position: relative; top: -70px; border-top: 2px solid rgba(255, 255, 255, 0.158);">
@@ -128,9 +128,10 @@
                             </div>
                         </div>
                         
+                        
                         <div id="match-history">
                             <div class="loader-container"><div class="loader"></div></div>
-                            {% include "summoner/match_card.html" %}
+                            
                         </div>
                         <div class="d-flex justify-content-center ">
                             <button id="loadMatches" class="btn btn-large btn-primary mt-4" onclick="loadMatchHistory()"> Load More</button>

@@ -50,20 +50,19 @@ function loadMatchHistory(){
   if (!isLoading) {
     isLoading = true;
     loadMatchesbtn.classList.add('disabled')
-    
     //console.log(player)
     username = player.getAttribute('data-name')
     puuid = player.getAttribute('data-puuid')
     continent = player.getAttribute('data-continent')
     start = matchHistory.children.length -1
-    var loader // this will be loader will be in load btn
-    ajaxLoadMatchs( puuid, continent, start, )
+    console.log(matchHistory.children)
+    ajaxLoadMatchs( puuid, continent, start)
     
   }
   
 }
 
-function ajaxLoadMatchs( puuid, continent, start, loader){
+function ajaxLoadMatchs( puuid, continent, start){
   var placeholder = document.createElement('div');
   $.ajax({
     type: "GET",
@@ -83,7 +82,7 @@ function ajaxLoadMatchs( puuid, continent, start, loader){
     success: (data) => {
       
       placeholder.innerHTML = data;
-      var popoverTriggerList = [].slice.call(placeholder.children[0].querySelectorAll('[data-bs-toggle="popover"]'))
+      var popoverTriggerList = [].slice.call(placeholder.querySelectorAll('[data-bs-toggle="popover"]'))
       var popoverList = popoverTriggerList.map(
         function (popoverTriggerEl) {
           if (popoverTriggerEl.classList.contains('item') && popoverTriggerEl.children[1]){
@@ -97,7 +96,7 @@ function ajaxLoadMatchs( puuid, continent, start, loader){
           }
         return new bootstrap.Popover(popoverTriggerEl,options)
       })
-      matchHistory.append(placeholder.children[0])
+      matchHistory.append(placeholder)
         
     },
     error: (error) => {
@@ -123,7 +122,7 @@ function detailsExpand(id){
     
     if (matchDetails){
       matchDetails.hidden = !matchDetails.hidden
-      btn = match.children[0].children[6]
+      btn = match.children[0].children[7]
       if (matchDetails.hidden){
         btn.children[0].children[0].classList = 'fas fa-angle-down'
       }else{
@@ -153,7 +152,7 @@ function ajaxLoadMatchDetails(id,match){
         timer && clearTimeout(timer);
         timer = setTimeout(function()
         {
-          btn = match.children[0].children[6]
+          btn = match.children[0].children[7]
           btn.children[0].children[0].classList = 'fas fa-angle-up disabled'
           loader.hidden = false
         },
@@ -174,6 +173,7 @@ function ajaxLoadMatchDetails(id,match){
             content = popoverTriggerEl.children[1].cloneNode(true)
             popoverTriggerEl.children[1].remove()
             content.hidden = false
+            
             var options = {animation:false, html:true, content: content} 
           }else{
             var options = {animation:false}   
