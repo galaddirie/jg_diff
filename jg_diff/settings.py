@@ -27,7 +27,7 @@ RIOT_API_KEY = os.environ.get(
     "RIOT_API_KEY", 'RGAPI-b94771b6-c67d-4a91-8801-23d19baf64fd')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG_VALUE", 'False') == True
+DEBUG = os.environ.get("DEBUG_VALUE", 'True') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'active_link',
     'django_cassiopeia',
-    'storages',
 ]
 
 # os.environ["RIOT_API_KEY"]  # api key in env var
