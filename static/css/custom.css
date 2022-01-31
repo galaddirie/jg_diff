@@ -320,12 +320,19 @@ background-color: var(--darkyellow);
 }
 
 @media (max-width: 991px) {
+
   .bg-right{
-    width: 0;
+    display: none;
   } 
+ 
 
 }
-
+@media (max-width:655px) {
+  .bg-left{
+    position: fixed;
+  }
+  
+}
 
 
 /*player valid page*/
@@ -340,7 +347,10 @@ background-color: var(--darkyellow);
   padding: 5px;
   border-radius: 10%;
 }
-
+.profile-container{
+  width: fit-content;
+  
+}
 .player-profile-header{
   height: 175px;
   
@@ -404,12 +414,43 @@ background-color: var(--darkyellow);
 .player-info-container{
   position: relative;
   font-size: 1em;
-  padding: 10px;
-  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 30px;
+  
+  width: fit-content;
+  
   height: 150px;
   top: -200px;
-  border-radius: 100px; 
+  border-radius:  0 100px 100px 0; 
   border: 1px solid rgba(255, 255, 255, 0.158);
+  margin-left: 90px;
+}
+
+
+#Game-Info{
+  margin-top: 150px;
+}
+@media screen and (max-width:768px) {
+  
+  .player-info-container{
+    top: -220px; 
+    padding: 20px;
+    justify-content: center;
+    height: 250px;
+    border-radius: 0 150px 150px 0;
+  }
+  .info-left{
+    justify-content: end;
+    height: 100%;
+    width: 100%;
+    min-width: 300px;
+    border-radius:0 150px 150px 0 ;
+    background-color: black; 
+    
+  }
+ 
 }
 .update-btn{
   position: absolute;
@@ -453,63 +494,76 @@ background-color: var(--darkyellow);
   color: var(--yellow);
 }
 
-/*
-## PLAYER PAGE VALID TABS ##
-*/
-
-.graph-header{
-  margin-bottom: 0 !important;
-  font-size: 12px;
-}
-
-.graph-header button {
-
-  font-weight: bold;
-  color: #616161;
-  background-color: rgb(59, 59, 59) !important;
-  
-  
-}
-.graph-header button:hover {
-background-color: rgb(141, 141, 141) !important;
-color: var(--primary);
-}
-.graph-header button:focus {
-  box-shadow:none;
-}
-.graph-header > li > .active{
-  background-color: rgb(117, 117, 117) !important;
-  color: var(--red) !important;
-  
-}
-.graph-header > li > .active:hover{
-  color: var(--darkbrown) !important;
-}
-.tab-content{
-  background-color: rgb(117, 117, 117);
-}
 
 
 /* MATCH HISTORY */
 .match-container{
-  margin-top: 150px; 
-   
+ display: flex;
+ flex-direction: column;
+ justify-content: space-between;
+ 
 }
 #match-history{
   min-height: 350px;
+  
+}
+.match-history-header{
+  display: flex;
+  align-items: center;
+  height: 50px;
+  border-radius: 25px;
+  padding: 10px; 
+  padding-left:20px;
+  max-width: 775px;
+  width: 100%;
+  margin: auto;
 }
 .match-card{
   display: flex;
   align-items: center;
   padding: 10px;
   min-height: fit-content;
+  margin: auto;
   margin-top: 20px;
   border-radius: 56px; 
   
-  width: 775px;
+  max-width: 775px;
   transition: .2s ease;
 }
 
+@media screen and  (max-width:992px) {
+  .match-content .participants{
+    display: none !important;
+
+  }
+}
+
+@media screen and  (max-width:768px) {
+  .match-content .items{
+    display: none !important;
+
+  }
+
+  .match-content .trinket{
+    display: none !important;
+
+  }
+}
+
+@media screen and  (max-width:459px) {
+  .match-content .player-stats-continued{
+    display: none !important;
+
+  }
+}
+
+@media screen and  (max-width:399px) {
+  .match-content .champion-info .summoner-spells, 
+  .match-content .champion-info .runes{
+    display: none !important;
+
+  }
+}
 .match-details{
   margin-top: 10px;
   height: fit-content;
@@ -519,6 +573,28 @@ color: var(--primary);
   transition: .2s ease;
 }
 
+@media screen and  (max-width:768px) {
+  .match-details .items-col{
+    display: none !important;
+
+  }
+
+}
+
+@media screen and  (max-width:433px) {
+  .match-details .player-list-name{
+    display: none !important;
+
+  }
+}
+
+
+@media screen and  (max-width:387px) {
+  .match-details .damage-bar{
+    display: none !important;
+
+  }
+}
 .result-WIN{
   background-image: linear-gradient(to top, #0d7091, rgba(65, 65, 65, 0));
   
@@ -708,6 +784,7 @@ color: var(--primary);
   justify-content: center;
   align-items: center;
   width: 775px;
+
   height: 400px;
   z-index: -1;
 }

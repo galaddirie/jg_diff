@@ -9,21 +9,21 @@
 
 
         <section id="Player-Info" data-puuid="{{0.puuid}}" data-continent="{{0.continent}}" data-name="{{0.name}}">
-            <div class="container mt-4  d-flex justify-content-between">
+            <div class="container mt-4  d-flex justify-content-center">
                 <div class="season-ranks d-flex">
                     
                 </div>
                 
             </div>
             
-            <div class="container profile-container"> 
+            <div class="profile-container mx-auto"> 
                 
                 <div class="player-profile-header"  >
                     
-                    <div class="player-profile-container  text-center text-light mx-auto" >
+                    <div class="player-profile-container  text-center text-light " >
                         
                         <div class="player-profile-icon">
-                            <div class="d-flex  justify-content-center">
+                            <div class="d-flex row justify-content-center">
                                 <div class="icon_banner " style="background-image: url( '{{ 0.leagues.SOLO.banner }}' );" ></div>
                                 <div class="icon_border " style="background-image: url( '{{ 0.profile_icon_border }}' );" ></div>
                             </div>
@@ -35,109 +35,141 @@
                             {{ 0.name }}
                         </div>
                     </div>
+                    <!-- <button class="update-btn btn btn-sm text-light">UPDATE</button>
+                    <button class="live-btn btn btn-sm text-light">LIVE</button> -->
                     
-                    <div class=" container player-info-container d-flex  bg-dark mx-auto py-4  "style="">
-                        <button class="update-btn btn btn-sm text-light">UPDATE</button>
-                        <button class="live-btn btn btn-sm text-light">LIVE</button>
-                        <div class="container d-flex" >
-                            <div class="info-left d-flex  align-items-center col-6 p-4" style="background-color: black; border-radius: 50px 0 0 50px;" >
-                                {% for league, entries in 0.leagues.items%}
-                                    
-                                    <div class="me-3 text-center">
-                                        
-                                        <div class="league-icon"><img src="{{ entries.icon }}" alt="{{entries.rank}}"></div> 
-                                    </div>
-                                    <div class="me-3 text-left" style="min-width: 130px;">
-                                        <div class="rank-name">{{league}}Q</div>
-                                        <div class="text-left" style="font-size: 1em;">
-                                            <span class="rank-value">{{entries.rank}} </span>
-                                            {% if entries.lp is not None %}
-                                            <span style="font-size: .9em;">{{entries.lp}}</span><span style="font-size: .7em;">LP</span>
-                                            {% endif %}
-                                        </div>
-                                        <div class="text-left" style="font-size: 15px;">
-                                            {% if entries.lp is not None %} 
-                                            {{ entries.wins }}<span style="font-size: .7em;">W</span> 
-                                            {{ entries.losses }}<span style="font-size: .7em;">L</span> 
-                                            {% endif %}
-                                        </div>
-                                        <div class="text-left" style="font-size: 15px;">
-                                            {% if entries.lp is not None %} 
-                                            {% if entries.promos.played %}
-                                                Series:
-                                                {% for win in entries.promos.played %}
-                                                    {% if win%}
-                                                        <span style="font-size: .7em; color: rgb(210, 255, 143);"><i class="fas fa-check"></i></span> 
-                                                    {% else %}
-                                                        <span style="font-size: .7em; color: rgb(252, 94, 94);"><i class="fas fa-times"></i></span> 
-                                                    {% endif %}
-                                                {% endfor %}
-                                                {% for i in entries.promos.not_played %}
-                                                    <span style="font-size: .7em; color: grey;"><i class="far fa-circle"></i></span> 
-                                                    
-                                                {% endfor %}
-                                            
-                                            {% else %}
-                                                Win Ratio: {{ entries.WR }}<span style="font-size: .7em;">%</span> 
-                                            {% endif %}
-                                            {% endif %}
-                                        </div>
-                                        
-                                    </div>
-                                    
-                                {% endfor %}
-                                
-                            </div>
-                            
-                            <div class="info-right  mx-4  col-6 container d-flex" style="padding-left: 60px;" >
-                                <div class="ms-3 col-6 d-flex">
-                                    <div class=" ">
-                                        <div style="width: 100px; height: 100px; border: 20px solid gray; border-radius: 100%;"></div>
-                                    </div>
-                                    <div class="ms-3">
-                                        <div style="width: 150px; height: 100px; background-color: rgb(31, 31, 31);"></div>
-                                    </div>
-                                </div>
-                                <div class="ms-3 text-center col-4" >
-                                    <div class="role-name">Preferred Role</div>
-                                    <div class="league-icon"><img src="{% static 'images/top_lane.png' %}" alt="gold 1"></i></div>
-                                    <div class="role-value">TOP</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </section>
         
 
         <section id="Game-Info">
-            <div class="container-fluid" style="z-index: -1; position: relative; top: -70px; border-top: 2px solid rgba(255, 255, 255, 0.158);">
+            <div class="container-fluid" style="z-index: -1; position: relative; top: -70px; border-top: 2px solid rgba(255, 255, 255, 0);">
             </div>
             <!--GAME info-->
-            <div class="container " style="max-width: 1200px;">
-                <div class="row justify-content-between">
+            <div class="container" >
+                <div class="row">
                     <!-- HISTORY SUMMARY-->
-                    <div class="col-4 graphs bg-dark" style="margin-top: 150px; height: 200px;">  
-                    </div>
-                    <!-- MATCH LIST-->
-                    <div class="col-8  match-container ">
-                        <div class="header" > 
-                            <div class="bg-dark" style="border-bottom: 1px solid rgba(255, 255, 255, 0.158); padding: 10px 10px 0 10px;">
-                            TOTAL, NORMAL, RANKED SOLO, FLEX
+                    <div class="col-lg-3 col-12   mt-4 bg-dark  " style="height: fit-content; border-radius: 75px;">
+                        <div class="row d-flex flex-lg-column justify-content-lg-start justify-content-between py-lg-4 p-1">
+                        <div class="row col-lg-12 col-md-4 col-12 align-items-center">
+                            <div class="col-6 p-0">
+                                <div class=" px-2 mx-auto" style="position: relative; max-width: 100px;">
+                                    <canvas id="myChart"></canvas>
+                                </div>  
+                            </div>
+                            <div class="col-6 p-0 ">
+                                Recent:
+                                <div class="">
+                                    <div class="summary-stats d-flex flex-column">
+                                        <div>
+                                            <span> 
+                                                <span class="winrate">0%</span>
+                                                 (<span class="wins">0</span><span style="font-size: .7em;">W</span> 
+                                                 <span class="loses">0</span><span style="font-size: .7em;">L</span>)
+                                             </span>
+                                        </div>
+                                    </div>
+                                    <div class="summary-stats d-flex flex-column ">
+                                        <div>
+                                            <div class="KDA">0/0/0</div>
+                                            <div class="KDA-ratio" style="color: #ffd166;">0.00 KDA</div>
+                                        </div>
+                                    </div>
+                                    
+
+                                </div>
                             </div>
                         </div>
                         
-                        
-                        <div id="match-history">
-                            <div class="loader-container"><div class="loader"></div></div>
+                        {% for league, entries in 0.leagues.items%}
+                        <div class="leagues row col-lg-12 col-md-4 col-12 align-items-center p-0 pt-lg-3 pt-0">
+                            <div class="col-6 p-0">
+                                
+                                <div class="px-3 d-flex justify-content-center">
+                                    <img src="{{ entries.icon }}" alt="{{entries.rank}}" style="width: 100%; max-width: 100px;">
+                                </div> 
+                            </div>
+                            <div class="col-6 p-0 text-left">
+                                <div class="rank-name">{{league}}Q</div>
+                                <div class="text-left" style="font-size: 1em;">
+                                    <span class="rank-value">{{entries.rank}} </span>
+                                    {% if entries.lp is not None %}
+                                    <span style="font-size: .9em;">{{entries.lp}}</span><span style="font-size: .7em;">LP</span>
+                                    {% endif %}
+                                </div>
+                                <div class="text-left" style="font-size: 15px;">
+                                    {% if entries.lp is not None %} 
+                                    {{ entries.wins }}<span style="font-size: .7em;">W</span> 
+                                    {{ entries.losses }}<span style="font-size: .7em;">L</span> 
+                                    {% endif %}
+                                </div>
+                                <div class="text-left" style="font-size: 15px;">
+                                    {% if entries.lp is not None %} 
+                                    {% if entries.promos.played %}
+                                        Series:
+                                        {% for win in entries.promos.played %}
+                                            {% if win%}
+                                                <span style="font-size: .7em; color: rgb(210, 255, 143);"><i class="fas fa-check"></i></span> 
+                                            {% else %}
+                                                <span style="font-size: .7em; color: rgb(252, 94, 94);"><i class="fas fa-times"></i></span> 
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% for i in entries.promos.not_played %}
+                                            <span style="font-size: .7em; color: grey;"><i class="far fa-circle"></i></span> 
+                                            
+                                        {% endfor %}
+                                    
+                                    {% else %}
+                                        Win Ratio: {{ entries.WR }}<span style="font-size: .7em;">%</span> 
+                                    {% endif %}
+                                    {% endif %}
+                                </div>
+                                
+                            </div>
+                        </div>
+                        {% endfor %}
                             
                         </div>
-                        <div class="d-flex justify-content-center ">
-                            <button id="loadMatches" class="btn btn-large btn-primary mt-4" onclick="loadMatchHistory()"> Load More</button>
-                        </div>
-        
+                        <!-- CHAMPION SECTION OF MATCH SUMMARY -->
+                        <!-- <div class="summary-stats">
+                            <div class="champion d-flex align-items-center">
+                                <div class="" tabindex="0" data-bs-placement="top" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="" data-bs-original-title="" title="">
+                                    <img class="champ-icon" src="https://ddragon.leagueoflegends.com/cdn/12.2.1/img/champion/Pantheon.png" alt="Pantheon">
+                                </div>
+                                <div class="winrate">0%</div>
+                                <div>
+                                    (
+                                    <span class="wins">0</span><span style="font-size: .7em;">W</span> 
+                                    <span class="loses">0</span><span style="font-size: .7em;">L</span> 
+                                    )
+                                </div>
+                                <div class="KDA-ratio">0.00 KDA</div>
+
+                            </div>
+                        </div> -->
                     </div>
+                    <!-- MATCH LIST-->
+                    <div class="mt-4 col-lg-9 col-12">
+                        <div class="match-container ">
+                            <div class="match-history-header bg-dark align-items-center" > 
+                                <div >
+                                Match History
+                                </div>
+                            </div>
+                            
+                            
+                            <div id="match-history">
+                                <div class="loader-container"><div class="loader"></div></div>
+                            </div>
+                            <div class="d-flex justify-content-center ">
+                                <button id="loadMatches" class="btn btn-large btn-primary mt-4" onclick="loadMatchHistory()"> Load More</button>
+                            </div>
+            
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </section>
@@ -148,3 +180,9 @@
 </div>
 
 {% endblock content %}
+
+{% block javascript%}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% if request.path == '/summoner/' %} <script src="{%static 'js/playerPageValid.js'%}"></script> {% endif %} 
+
+{% endblock javascript %}
