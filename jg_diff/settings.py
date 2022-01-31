@@ -22,10 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-y=3*zi_lxqz)s-8fh^dx!6rdd(s=_2b5_f^$(*x($%#v7khkj6'
-RIOT_API_KEY = 'RGAPI-bc93c6b0-45e3-47e4-981e-c8eefab04549'
+SECRET_KEY = os.environ.get("SECRET_KEY", '123456')
+RIOT_API_KEY = os.environ.get(
+    "RIOT_API_KEY", 'RGAPI-b94771b6-c67d-4a91-8801-23d19baf64fd')
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", 'False')
 
 ALLOWED_HOSTS = []
 
@@ -42,9 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'active_link',
     'django_cassiopeia',
+    'storages',
 ]
 
-CASSIOPEIA_RIOT_API_KEY = RIOT_API_KEY# os.environ["RIOT_API_KEY"]  # api key in env var
+# os.environ["RIOT_API_KEY"]  # api key in env var
+CASSIOPEIA_RIOT_API_KEY = RIOT_API_KEY
 CASSIOPEIA_LIMITING_SHARE = 1.0
 CASSIOPEIA_DEFAULT_REGION = "NA"   # default region
 CASSIOPEIA_LOGGING = {
@@ -62,8 +66,9 @@ CACHES = {
     },
     "cass-redis": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": os.environ.get('REDIS_URL', 'redis://localhost:6379'),
         "OPTIONS": {
+            'PASSWORD': os.environ.get('REDIS_PASSWORD'),
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "PICKLE_VERSION": -1,
             "COMPRESSOR": "django_redis.compressors.lz4.Lz4Compressor",
@@ -79,7 +84,7 @@ CACHES = {
 
 CASSIOPEIA_PIPELINE = {
     "Omnistone": {
-        "EXPIRATIONS_MAP" : {
+        "EXPIRATIONS_MAP": {
             td(hours=3): ["c", "c+", "r", "r+", "cr", "i", "i+", "pi", "pi+"],
             td(hours=6): ["rl", "v", "ss", "ss+", "mp", "mp+", "ls", "ls+"],
             0: ["*+"]
@@ -90,32 +95,30 @@ CASSIOPEIA_PIPELINE = {
         "LOGS_ENABLED": False,
     },
     "DjangoCache": [
-            {
-                "ALIAS" : "cass-redis",
-                "EXPIRATIONS_MAP" : {
-                    td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-", ],
-                    td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
-                    td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
-                    0: ["*-"]
-                },
-                "SAFE_CHECK": True,
-                "LOGS_ENABLED": False,
+        {
+            "ALIAS": "cass-redis",
+            "EXPIRATIONS_MAP": {
+                td(hours=6): ["rl-", "v-", "cr-", "cm-", "cm+-", "cl-", "gl-", "ml-", ],
+                td(days=7): ["mp-", "mp+-", "ls-", "ls+-", "t-", 'm-'],
+                td(minutes=15): ["cg-", "fg-", "shs-", "s-"],
+                0: ["*-"]
             },
-            {
-                "ALIAS": "filebased",
-                "EXPIRATIONS_MAP": {
-                    td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
-                    0: ["*-"]
-                },
-                "SAFE_CHECK": True,
-                "LOGS_ENABLED": False,
-            }
+            "SAFE_CHECK": True,
+            "LOGS_ENABLED": False,
+        },
+        {
+            "ALIAS": "filebased",
+            "EXPIRATIONS_MAP": {
+                td(days=1): ["c-", "c+-", "r-", "r+-", "i-", "i+-", "ss-", "ss+-", "pi-", "pi+-", "p-"],
+                0: ["*-"]
+            },
+            "SAFE_CHECK": True,
+            "LOGS_ENABLED": False,
+        }
     ],
     "DDragon": {},
     "RiotAPI": {},
 }
-
-
 
 
 CASSIOPEIA_API_ERROR_HANDLING = {
@@ -130,7 +133,6 @@ CASSIOPEIA_API_ERROR_HANDLING = {
         "APPLICATION": ["r", 5],
     },
 }
-
 
 
 MIDDLEWARE = [
@@ -212,6 +214,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static"
