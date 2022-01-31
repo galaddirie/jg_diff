@@ -219,11 +219,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-WHITENOISE_USE_FINDERS = True
-WHITENOISE_MANIFEST_STRICT = False
-WHITENOISE_ALLOW_ALL_ORIGINS = True
+
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
