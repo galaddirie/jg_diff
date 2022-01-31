@@ -113,7 +113,7 @@ CASSIOPEIA_PIPELINE = {
                 0: ["*-"]
             },
             "SAFE_CHECK": True,
-            "LOGS_ENABLED": False,
+            "LOGS_ENABLED": True,
         }
     ],
     "DDragon": {},
