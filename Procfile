@@ -1,0 +1,1 @@
+web: gunicorn jg_diff.wsgi
