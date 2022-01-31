@@ -30,7 +30,7 @@ RIOT_API_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG_VALUE", 'True') == 'True'
 
-ALLOWED_HOSTS = ['jg-diff.herokuapp.com']
+ALLOWED_HOSTS = ['https://jg-diff.herokuapp.com/']
 
 
 # Application definition
