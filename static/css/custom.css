@@ -287,14 +287,19 @@ background-color: var(--darkyellow);
   width: 100%;
   
   height: 250px;
-  background-position: center; /* Center the image */
-  background-repeat: no-repeat; /* Do not repeat the image */
-  background-size: cover; /* Resize the background image to cover the entire container */
-  filter: grayscale(50%) contrast(80%);
-  transition: .2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  
 
 }
-.card-img-container:hover{
+.card-img-container img{
+  height: 100%;
+  filter: grayscale(50%) contrast(80%);
+  transition: .2s ease;
+}
+.card-img-container img:hover{
   
   filter: grayscale(0%) contrast(100%);
 }
@@ -342,6 +347,7 @@ background-color: var(--darkyellow);
   position: absolute;
   top: 80px;
   width: 100%;
+  height: fit-content;
 }
 
 @media (max-width: 991px) {
@@ -350,6 +356,9 @@ background-color: var(--darkyellow);
     display: none;
   } 
  
+  footer{
+    margin-top: 800px;
+  }
 
 }
 @media (max-width:655px) {
