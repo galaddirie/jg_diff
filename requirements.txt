@@ -6,9 +6,11 @@ certifi==2020.12.5
 chardet==4.0.0
 datapipelines==1.0.7
 Deprecated==1.2.13
+dj-database-url==0.5.0
 Django==3.2
 django-active-link==0.1.8
 django-cassiopeia==2.1.1
+django-on-heroku==1.1.2
 django-redis==5.0.0
 gunicorn==20.1.0
 hashring==1.5.1
@@ -22,6 +24,7 @@ networkx==2.6.3
 numpy==1.20.2
 pandas==1.2.4
 Pillow==8.3.2
+psycopg2-binary==2.9.3
 pycodestyle==2.8.0
 pymemcache==3.5.0
 python-dateutil==2.8.1
@@ -32,4 +35,5 @@ six==1.15.0
 sqlparse==0.4.1
 toml==0.10.2
 urllib3==1.26.4
+whitenoise==5.3.0
 wrapt==1.13.3
