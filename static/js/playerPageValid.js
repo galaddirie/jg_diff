@@ -138,8 +138,10 @@ function ajaxLoadMatchs(puuid, continent, start) {
         }
       }
       placeholder.innerHTML = history;
+      if (data['summary']['num'] != 0) {
+        statSummary()
+      }
 
-      statSummary()
       var popoverTriggerList = [].slice.call(placeholder.querySelectorAll('[data-bs-toggle="popover"]'))
       var popoverList = popoverTriggerList.map(
         function (popoverTriggerEl) {
