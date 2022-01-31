@@ -92,7 +92,7 @@ CASSIOPEIA_PIPELINE = {
         "MAX_ENTRIES": 6000,
         "CULL_FRECUENCY": 2,
         "SAFE_CHECK": True,
-        "LOGS_ENABLED": True,
+        "LOGS_ENABLED": False,
     },
     "DjangoCache": [
         {
