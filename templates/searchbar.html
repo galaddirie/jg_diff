@@ -1,10 +1,17 @@
 
 <form id="player-search" method="GET" class=" searchbar d-flex my-lg-0 my-3 " action="{% url 'player-page' %}">
-    <input  name = 'username' class="form-control search-custom" type="search" placeholder="Name 1, Name 2, ..." aria-label="Search">
+    <input  name = 'username' class="form-control search-custom" type="search" placeholder="Summoner Name" aria-label="Search">
     <select name = 'region'class="search-region-select form-select form-select-sm" style="width: 80px;" aria-label="Select Region">
-        <option value="NA" selected >NA</option>
-        <option value="EUW">EUW</option>
-        <option value="KR">KR</option>
+        <option value="NA"  {%if 0.region == "NA"%}   selected {%endif%} >NA  </option>
+        <option value="EUW" {%if 0.region == "EUW"%}  selected {%endif%} >EUW </option>
+        <option value="EUNE"{%if 0.region == "EUNE"%} selected {%endif%} >EUNE</option>
+        <option value="KR"  {%if 0.region == "KR"%}   selected {%endif%} >KR  </option>
+        <option value="OCE" {%if 0.region == "OCE"%}  selected {%endif%} >OCE </option>
+        <option value="LAN" {%if 0.region == "LAN"%}  selected {%endif%} >LAN </option>
+        <option value="LAS" {%if 0.region == "LAS"%}  selected {%endif%} >LAS </option>
+        <option value="TR"  {%if 0.region == "TR"%}   selected {%endif%} >TR  </option>
+        <option value="RU"  {%if 0.region == "RU"%}   selected {%endif%} >RU  </option>
+        <option value="JP"  {%if 0.region == "JP"%}   selected {%endif%} >JP  </option>
     </select>
     <button class="search-btn search-custom px-2" type="submit"><i class="fas fa-search"></i></button>
 </form>
