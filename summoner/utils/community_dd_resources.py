@@ -4,7 +4,7 @@ CDRAGON = 'https://raw.communitydragon.org/latest/plugins/'
 
 def get_perstige_crest(level):
     crest_id = border_icon_id(level)
-    icon = CDRAGON+'rcp-be-lol-game-data/global/default/content/src/leagueclient/prestigeborders/theme-{}-solid-border.png'\
+    icon = CDRAGON+'rcp-fe-lol-static-assets/global/default/images/uikit/themed-level-ring/theme-{}-solid-border.png'\
         .format(crest_id)
     #print('Making call:', icon)
     return icon
