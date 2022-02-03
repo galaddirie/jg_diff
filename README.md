@@ -2,6 +2,7 @@
 
 Jungle diff is a player and team composition anaylsis tool built with Django
 
+![image](https://user-images.githubusercontent.com/70884733/152388727-49062af8-e2a1-4260-b858-bfb97c144dcd.png)
 
 
 # How to install Repo
