@@ -1,6 +1,6 @@
 
 <form id="player-search" method="GET" class=" searchbar d-flex my-lg-0 my-3 " action="{% url 'player-page' %}">
-    <input  name = 'username' class="form-control search-custom" type="search" placeholder="Summoner Name" aria-label="Search">
+    <input  name = 'username' class="form-control search-custom" type="search" placeholder="Summoner Name ex. Yasukeh" aria-label="Search">
     <select name = 'region'class="search-region-select form-select form-select-sm" style="width: 80px;" aria-label="Select Region">
         <option value="NA"  {%if 0.region == "NA"%}   selected {%endif%} >NA  </option>
         <option value="EUW" {%if 0.region == "EUW"%}  selected {%endif%} >EUW </option>
