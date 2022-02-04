@@ -18,7 +18,7 @@ Jungle diff is a player and team composition anaylsis tool built with Django
 ![image](https://user-images.githubusercontent.com/70884733/152389680-1503a72a-db52-41e0-9cfd-fdaee0a1b463.png)
 
 
-## How to install Repo
+## How to Install Repo
 
 To install this repository on your machine
 1. Clone this repository: `$ git clone https://github.com/galaddirie/jg_diff.git` 
